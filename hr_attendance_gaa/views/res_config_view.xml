@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!--<data>
+        <record id="hr_view_config_inh" model="ir.ui.view">
+            <field name="name">hr.view.config.inh</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="hr.view_human_resources_configuration"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='contract_grp']" position="after">
+                    <group name="attendance_gaa">
+                        <label for="id" string="Lista de asistencia Grupo Agrícola"/>
+                        <div>
+                            <div name="order_sequence">
+                                <field name="module_hr_attendance_order" class="oe_inline"/>
+                                <label for="module_hr_attendance_order"/>
+                            </div>
+                        </div>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>-->
+</odoo>

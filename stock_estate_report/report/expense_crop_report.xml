@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="expense_crop_report_template" name="Reporte de gastos de cultivo">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                <div class="page">
+                    <style type="text/css">
+                    .company-img img {
+                        width: 18em;
+                        height: 8em;
+                    }
+                    .company-info {
+                        font-size: 1.8em;
+                    }
+                    .title-main {
+                        font-size:2.5em;
+                        text-align: center;
+                        font-weight: bold;
+                        padding: 60px 0 60px 0;
+                    }
+                    .attendee-info {
+                        font-size: 2em;
+                        padding: 10px 0 35px 0;
+                    }
+                    .table-resume {
+                        font-size: 1.6em;
+                    }
+                </style>
+                    <div class="oe_structure"/>
+                    <div class="row">
+                        <strong><h1>Reporte de gastos de cultivos</h1></strong>
+                        Fecha from: <t t-esc="o.date_from"></t><br/>
+                        Fecha   to: <t t-esc="o.date_to"></t><br/>
+                    </div>
+                    <div class="row">
+                        <t t-esc="get_expense_crop_report(o.season_id, o.estate_id, o.crop_id, o.date_from, o.date_to, o.product_type_id)"/>
+                    </div>
+                </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

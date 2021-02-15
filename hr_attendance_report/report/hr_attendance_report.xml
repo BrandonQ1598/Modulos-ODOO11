@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_hr_attendance">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <div class="page">
+                        <style type="text/css">
+                    .company-img img {
+                        width: 18em;
+                        height: 8em;
+                    }
+                    .company-info {
+                        font-size: 1.8em;
+                    }
+                    .title-main {
+                        font-size:2.5em;
+                        text-align: center;
+                        font-weight: bold;
+                        padding: 60px 0 60px 0;
+                    }
+                    .attendee-info {
+                        font-size: 2em;
+                        padding: 10px 0 35px 0;
+                    }
+                    .table-resume {
+                        font-size: 1.6em;
+                    }
+                </style>
+                        <div class="oe_structure"/>
+                        <div class="row">
+                            <div class="col-xs-3 company-img">
+                                <img t-att-src="'data:image/png;base64,%s' % o.company_id.logo_web"/>
+                            </div>
+                            <div class="col-xs-9 text-center">
+                                <h1><strong><div t-field="o.company_id.name"/></strong></h1>
+                                <div class="company-info">
+                                    <span t-field="o.company_id.partner_id.street"/>
+                                    <span t-field="o.company_id.partner_id.street2"/>
+                                    <span t-field="o.company_id.partner_id.city"/><br/>
+                                    <span t-field="o.company_id.partner_id.phone"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row title-main">
+                            <span>Lista de asistencia y corte</span>
+                        </div>
+                        <div class="row attendee-info">
+                            <div class="col-xs-6">
+                                <strong>Nombre: </strong><span t-field="o.name"/><br/>
+                                <strong>Período: </strong><span t-field="o.date_from"/> - <span t-field="o.date_to"/><br/>
+                            </div>
+                            <div class="col-xs-6">
+                                <strong>Empresa: </strong><span t-field="o.company_hg_id.name"/><br/>
+                                <strong>Fecha de impresión: </strong><span t-usertime="%d/%m/%Y"/>
+                            </div>
+                        </div>
+                        <div class="row table-resume">
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>Empleado</th>
+                                        <th class="text-center">Asistencias</th>
+                                        <th class="text-center">C.Framb.</th>
+                                        <th class="text-center">C.Fresa</th>
+                                        <th class="text-center">B.Framb.</th>
+                                        <th class="text-center">B.Fresa</th>
+                                        <th class="text-center">Horas</th>
+                                        <th class="text-center">H. Extra</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="o.resume" t-as="line">
+                                        <td><span t-field="line.name"/></td>
+                                        <td class="text-center"><span t-field="line.total_attended"/></td>
+                                        <td class="text-center"><span t-esc="line.total_boxes_rasp1 + line.total_boxes_rasp2 + line.total_boxes_rasp3"/></td>
+                                        <td class="text-center"><span t-esc="line.total_boxes_straw1 + line.total_boxes_straw2 + line.total_boxes_straw3"/></td>
+                                        <td class="text-center"><span t-esc="line.total_pots_rasp1 + line.total_pots_rasp2 + line.total_pots_rasp3"/></td>
+                                        <td class="text-center"><span t-esc="line.total_pots_straw1 + line.total_pots_straw2 + line.total_pots_straw3"/></td>
+                                        <td class="text-center"><span t-field="line.total_hours"/></td>
+                                        <td class="text-center"><span t-field="line.total_extra_hours"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

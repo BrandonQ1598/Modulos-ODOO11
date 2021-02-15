@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <report
+            id="action_bonus_week_report"
+            string="Reporte de bono"
+            model="stock.estate.report"
+            report_type="qweb-pdf"
+            name="stock_estate_report.bonus_week_report"
+            file="stock_estate_report.bonus_week_report"
+            paperformat="stock_estate_report.paperformat_letter_expense"
+            menu="False"
+        />
+        <!--<record id="action_bonus_week_report" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="stock_estate_report.paperformat_letter_expense"/>
+        </record>-->
+
+        <!-- Reporte de gastos de cultivos -->
+        <report
+            id="action_expense_crop_report"
+            string="Reporte de gastos"
+            model="expense.crop.report.wizard"
+            report_type="qweb-pdf"
+            name="stock_estate_report.expense_crop_report_template"
+            file="stock_estate_report.expense_crop_report_template"
+            paperformat="stock_estate_report.paperformat_letter_expense"
+            menu="False"
+        />
+        <!--<record id="action_expense_crop_report" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="stock_estate_report.paperformat_letter_expense"/>
+        </record>-->
+    </data>
+</odoo>

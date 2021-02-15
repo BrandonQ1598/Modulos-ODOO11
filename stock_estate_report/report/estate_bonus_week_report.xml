@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="stock_estate_report.bonus_week_report" name="Reporte de bonificacion">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                <div class="page">
+                    <style type="text/css">
+                    .company-img img {
+                        width: 18em;
+                        height: 8em;
+                    }
+                    .company-info {
+                        font-size: 1.8em;
+                    }
+                    .title-main {
+                        font-size:2.5em;
+                        text-align: center;
+                        font-weight: bold;
+                        padding: 60px 0 60px 0;
+                    }
+                    .attendee-info {
+                        font-size: 2em;
+                        padding: 10px 0 35px 0;
+                    }
+                    .table-resume {
+                        font-size: 1.6em;
+                    }
+                </style>
+                    <div class="oe_structure"/>
+                    <div class="row">
+                        <strong><h1>Reporte de bonificación semanal</h1></strong>
+                        Fecha from: <t t-esc="o.date_from"></t><br/>
+                        Fecha   to: <t t-esc="o.date_to"></t><br/>
+                        <t t-foreach="o.attendance_ids" t-as="a">
+                            Attendance: <t t-esc="a.name"></t><br/>
+                        </t>
+                    </div>
+                    <div class="row">
+                        <t t-esc="get_test(o.date_from)"/>
+                    </div>
+                </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

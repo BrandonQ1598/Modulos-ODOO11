@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>      
+        <template id="assets_backend" name="hr_attendance_gaa assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/hr_attendance_gaa/static/src/css/style.css"/>
+            </xpath>
+        </template>     
+        <!-- Search view Attendance -->
+        <record id="hr_attendance_gaa_search" model="ir.ui.view">
+            <field name="name">hr.attendance.gaa.search</field>
+            <field name="model">hr.attendance.gaa</field>
+            <field name="arch" type="xml">
+                <search string="Busqueda lista de asistencia">
+                    <field name="name"/>
+                    <field name="company_hg_id"/>
+                    <field name="season_id"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="state"/>
+                    <field name="user_id"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Tree view attendance -->
+        <record id="hr_attendance_gaa_tree" model="ir.ui.view">
+            <field name="name">hr.attendance.gaa.tree</field>
+            <field name="model">hr.attendance.gaa</field>
+            <field name="arch" type="xml">
+                <tree string="Lista de asistencia">
+                    <field name="name"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="company_hg_id" widget="selection"/>
+                    <field name="season_id"/>
+                    <field name="user_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form view attendance -->
+        <record id="hr_attendance_gaa_form" model="ir.ui.view">
+            <field name="name">hr.attendance.gaa.form</field>
+            <field name="model">hr.attendance.gaa</field>
+            <field name="arch" type="xml">
+                <form string="Lista de asistencia">
+                    <header>
+                        <button name="action_confirmed" type="object" string="Confirmar"
+                                states="loaded" class="oe_highlight"
+                                confirm="Esta seguro(a), que desea confirmar la lista de asistencia actual?"/>
+                        <button name="action_done" type="object" string="Terminada"
+                                states="confirmed" class="oe_highlight"
+                                confirm="Esta seguro(a), que desea marcar como realizada la lista de asistencia actual?"/>
+                        <button name="calculate" type="object" string="Calcular"
+                                states="loaded" class="oe_highlight"
+                                confirm="Esta seguro(a), que desea calcular los totales de la lista de asistencia actual?"/>
+                        <button name="action_loaded" type="object" states="draft" string="Cargar empleados" class="oe_highlight"
+                                confirm="Esta seguro(a), que desea cargar los empleados a la lista de asistencia?"/>
+                        <!--<button name="change_to_loaded" type="object" states="draft" string="Marcar como generada"
+                                confirm="Esta seguro(a), que desea marcar como generada la lista de asistencia?"/>-->
+                        <button name="action_canceled" type="object" string="Cancelar" states="draft,loaded,confirmed"
+                                confirm="Esta seguro(a), que desea cancelar la lista de asistencia actual?"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,loaded,confirmed,done"/>
+                    </header>
+                    <div class="oe_title" id="name_attendance">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" class="oe_inline"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="reference"/>
+                            <label for="date_from" string="Período de la lista"/>
+                            <div>
+                                <field name="date_from" class="oe_inline"/> - <field name="date_to" class="oe_inline"/>
+                            </div>
+                            <label for="time_in" string="Horario de trabajo"/>
+                            <div>
+                                <field name="time_in" class="oe_inline" widget="float_time"/> -
+                                <field name="time_out" class="oe_inline" widget="float_time"/>
+                            </div>
+                            <label for="time_in" string="Horario de domingo"/>
+                            <div>
+                                <field name="time_in_sunday" class="oe_inline" widget="float_time"/> -
+                                <field name="time_out_sunday" class="oe_inline" widget="float_time"/>
+                                <field name="bonus_amount" invisible="1"/>
+                                <field name="discount_amount" invisible="1"/>
+                            </div>
+                            <field name="hide_columns"/>
+                        </group>
+                        <group>
+                            <field name="company_hg_id" options="{'no_create': True}"/>
+                            <field name="season_id" options="{'no_create': True}" on_change="get_domain_default_crop(season_id)"/>
+                            <field name="user_id"/>
+                            <field name="default_crop_id" domain="[('state', 'in', ['open'])]"/>
+                        </group>
+                    </group>
+                    <group name="add_employee" class="oe_edit_only" states="draft,loaded">
+                        <group>
+                            <div>
+                                <h3><b>Agregar/Quitar empleado:</b></h3>
+                                <field name="employee_id" class="oe_inline" options="{'no_create': 1, 'no_open': 1}" attrs="{'invisible': [('state', 'in', ['confirmed', 'done', 'canceled'])]}"/>
+                                <button name="add_employee" class="oe_inline" type="object" string="Agregar"/>
+                                <button name="remove_employee" class="oe_inline" type="object" string="Quitar" context="{'employee_id': employee_id}"/>
+                                <button name="count_employees" class="oe_inline" type="object" string="Contar empleados"/>
+                            </div>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Jueves">
+                            <field name="thursday_date" readonly="1" nolabel="1"/>
+                            <field name="thursday_employees_ids">
+                                <tree editable="bottom" string="Empleados" create="false" delete="false">
+                                    <field name="sequence" widget="handle"/>
+                                    <button type="action" name="%(action_print_work_day_thursday)d" string="Imprimir línea" icon="gtk-print" class="oe_highlight"/>
+                                    <field name="name" domain="[('active', '=', True)]"/>
+                                    <field name="employee_type" invisible="1"/>
+                                    <field name="attended" sum="total_attended" on_change="set_default_crop(1,0,0,0,0,attended,0,0)"/>
+                                    <field name="season_id" invisible="True"/>
+                                    <field name="attended_crop_id" domain="[('state', 'in', ['open'])]" options="{'no_create': True}"/>
+                                    <field name="time_in" widget="float_time" on_change="calculate_hours({'time_in': time_in, 'time_out': time_out})"/>
+                                    <field name="time_out" widget="float_time" on_change="calculate_hours({'time_in': time_in, 'time_out': time_out})"/>
+                                    <!-- Corte cultivo 1 -->
+                                    <field name="boxes_rasp1" sum="total_boxes_rasp1" invisible="context.get('hide_columns', False)" on_change="set_default_crop(2,boxes_rasp1,boxes_straw1,pots_rasp1,pots_straw1,0,0,0)"/>
+                                    <field name="boxes_straw1" sum="total_boxes_straw1" invisible="context.get('hide_columns', False)" on_change="set_default_crop(2,boxes_rasp1,boxes_straw1,pots_rasp1,pots_straw1,0,0,0)"/>
+                                    <field name="pots_rasp1" sum="total_pots_rasp1" invisible="context.get('hide_columns', False)" on_change="set_default_crop(2,boxes_rasp1,boxes_straw1,pots_rasp1,pots_straw1,0,0,0)"/>
+                                    <field name="pots_straw1" sum="total_pots_straw1" invisible="context.get('hide_columns', False)" on_change="set_default_crop(2,boxes_rasp1,boxes_straw1,pots_rasp1,pots_straw1,0,0,0)"/>
+                                    <field name="boxes_pots_crop_id1" domain="[('state', 'in', ['open'])]" options="{'no_create': True}" invisible="context.get('hide_columns', False)"/>
+                                    <!-- Corte cultivo 2 -->
+                                    <field name="boxes_rasp2" sum="total_boxes_rasp2" invisible="context.get('hide_columns', False)" on_change="set_default_crop(3,boxes_rasp2,boxes_straw2,pots_rasp2,pots_straw2,0,0,0)"/>
+                                    <field name="boxes_straw2" sum="total_boxes_straw2" invisible="context.get('hide_columns', False)" on_change="set_default_crop(3,boxes_rasp2,boxes_straw2,pots_rasp2,pots_straw2,0,0,0)"/>
+                                    <field name="pots_rasp2" sum="total_pots_rasp2" invisible="context.get('hide_columns', False)" on_change="set_default_crop(3,boxes_rasp2,boxes_straw2,pots_rasp2,pots_straw2,0,0,0)"/>
+                                    <field name="pots_straw2" sum="total_pots_straw2" invisible="context.get('hide_columns', False)" on_change="set_default_crop(3,boxes_rasp2,boxes_straw2,pots_rasp2,pots_straw2,0,0,0)"/>
+                                    <field name="boxes_pots_crop_id2" domain="[('state', 'in', ['open'])]" options="{'no_create': True}" invisible="context.get('hide_columns', False)"/>
+                                    <!-- Corte cultivo 3 -->
+                                    <field name="boxes_rasp3" sum="total_boxes_rasp3" invisible="context.get('hide_columns', False)" on_change="set_default_crop(4,boxes_rasp3,boxes_straw3,pots_rasp3,pots_straw3,0,0,0)"/>
+                                    <field name="boxes_straw3" sum="total_boxes_straw3" invisible="context.get('hide_columns', False)" on_change="set_default_crop(4,boxes_rasp3,boxes_straw3,pots_rasp3,pots_straw3,0,0,0)"/>
+                                    <field name="pots_rasp3" sum="total_pots_rasp3" invisible="context.get('hide_columns', False)" on_change="set_default_crop(4,boxes_rasp3,boxes_straw3,pots_rasp3,pots_straw3,0,0,0)"/>
+                                    <field name="pots_straw3" sum="total_pots_straw3" invisible="context.get('hide_columns', False)" on_change="set_default_crop(4,boxes_rasp3,boxes_straw3,pots_rasp3,pots_straw3,0,0,0)"/>
+                                    <field name="boxes_pots_crop_id3" domain="[('state', 'in', ['open'])]" options="{'no_create': True}" invisible="context.get('hide_columns', False)"/>
+                                    <field name="hours" sum="total_hours" widget="float_time" on_change="set_default_crop(5,0,0,0,0,0,hours,0)"/>
+                                    <field name="hours_crop_id" domain="[('state', 'in', ['open'])]" options="{'no_create': True}"/>
+                                    <field name="activity_id" options="{'no_create': True}"/>
+                                    <field name="extra_hours" sum="total_extra_hours" widget="float_time" on_change="set_default_crop(6,0,0,0,0,0,0,extra_hours)"/>
+                                    <field name="extra_hours_crop_id" domain="[('state', 'in', ['open'])]" options="{'no_create': True}"/>
+                                    <field name="comments"/>
+                                    <field name="extra_activity_id" options="{'no_create': True}"/>
+                                    <field name="extra_expense" sum="extra_expense_total"/>
+                                    <field name="extra_expense_activity_id" options="{'no_create': True}"/>
+                                    <field name="extra_expense_estate_id" options="{'no_create': True}"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Viernes">
+                            <field name="friday_date" readonly="1" nolabel="1"/>
+                            <field name="friday_employees_ids">
+                                <tree editable="bottom" string="Empleados" create="false" delete="false">
+                                    <field name="sequence" widget="handle"/>
+                                    <button type="action" name="%(action_print_work_day_friday)d" string="Imprimir línea" icon="gtk-print" class="oe_highlight"/>
+                                    <field name="name" domain="[('active', '=', True)]"/>
+                                    <field name="employee_type" invisible="1"/>
+                                    <field name="attended" sum="total_attended" on_change="set_default_crop(1,0,0,0,0,attended,0,0)"/>
+                                    <field name="season_id" invisible="True"/>
+                                    <field name="attended_crop_id" domain="[('state', 'in', ['open'])]" options="{'no_create': True}"/>
+                                    <field name="time_in" widget="float_time" on_change="calculate_hours({'time_in': time_in, 'time_out': time_out})"/>
+                                    <field name="time_out" widget="float_time" on_change="calculate_hours({'time_in': time_in, 'time_out': time_out})"/>
+                                    <!-- Corte cultivo 1 -->
+                                    <field name="boxes_rasp1" sum="total_boxes_rasp1" invisible="context.get('hide_columns', False)" on_change="set_default_crop(2,boxes_rasp1,boxes_straw1,pots_rasp1,pots_straw1,0,0,0)"/>
+                                    <field name="boxes_straw1" sum="total_boxes_straw1" invisible="context.get('hide_columns', False)" on_change="set_default_crop(2,boxes_rasp1,boxes_straw1,pots_rasp1,pots_straw1,0,0,0)"/>
+                                    <field name="pots_rasp1" sum="total_pots_rasp1" invisible="context.get('hide_columns', False)" on_change="set_default_crop(2,boxes_rasp1,boxes_straw1,pots_rasp1,pots_straw1,0,0,0)"/>
+                                    <field name="pots_straw1" sum="total_pots_straw1" invisible="context.get('hide_columns', False)" on_change="set_default_crop(2,boxes_rasp1,boxes_straw1,pots_rasp1,pots_straw1,0,0,0)"/>
+                                    <field name="boxes_pots_crop_id1" domain="[('state', 'in', ['open'])]" options="{'no_create': True}" invisible="context.get('hide_columns', False)"/>
+                                    <!-- Corte cultivo 2 -->
+                                    <field name="boxes_rasp2" sum="total_boxes_rasp2" invisible="context.get('hide_columns', False)" on_change="set_default_crop(3,boxes_rasp2,boxes_straw2,pots_rasp2,pots_straw2,0,0,0)"/>
+                                    <field name="boxes_straw2" sum="total_boxes_straw2" invisible="context.get('hide_columns', False)" on_change="set_default_crop(3,boxes_rasp2,boxes_straw2,pots_rasp2,pots_straw2,0,0,0)"/>
+                                    <field name="pots_rasp2" sum="total_pots_rasp2" invisible="context.get('hide_columns', False)" on_change="set_default_crop(3,boxes_rasp2,boxes_straw2,pots_rasp2,pots_straw2,0,0,0)"/>
+                                    <field name="pots_straw2" sum="total_pots_straw2" invisible="context.get('hide_columns', False)" on_change="set_default_crop(3,boxes_rasp2,boxes_straw2,pots_rasp2,pots_straw2,0,0,0)"/>
+                                    <field name="boxes_pots_crop_id2" domain="[('state', 'in', ['open'])]" options="{'no_create': True}" invisible="context.get('hide_columns', False)"/>
+                                    <!-- Corte cultivo 3 -->
+                                    <field name="boxes_rasp3" sum="total_boxes_rasp3" invisible="context.get('hide_columns', False)" on_change="set_default_crop(4,boxes_rasp3,boxes_straw3,pots_rasp3,pots_straw3,0,0,0)"/>
+                                    <field name="boxes_straw3" sum="total_boxes_straw3" invisible="context.get('hide_columns', False)" on_change="set_default_crop(4,boxes_rasp3,boxes_straw3,pots_rasp3,pots_straw3,0,0,0)"/>
+                                    <field name="pots_rasp3" sum="total_pots_rasp3" invisible="context.get('hide_columns', False)" on_change="set_default_crop(4,boxes_rasp3,boxes_straw3,pots_rasp3,pots_straw3,0,0,0)"/>
+                                    <field name="pots_straw3" sum="total_pots_straw3" invisible="context.get('hide_columns', False)" on_change="set_default_crop(4,boxes_rasp3,boxes_straw3,pots_rasp3,pots_straw3,0,0,0)"/>
+                                    <field name="boxes_pots_crop_id3" domain="[('state', 'in', ['open'])]" options="{'no_create': True}" invisible="context.get('hide_columns', False)"/>
+                                    <field name="hours" sum="total_hours" widget="float_time" on_change="set_default_crop(5,0,0,0,0,0,hours,0)"/>
+                                    <field name="hours_crop_id" domain="[('state', 'in', ['open'])]" options="{'no_create': True}"/>
+                                    <field name="activity_id" options="{'no_create': True}"/>
+                                    <field name="extra_hours" sum="total_extra_hours" widget="float_time" on_change="set_default_crop(6,0,0,0,0,0,0,extra_hours)"/>
+                                    <field name="extra_hours_crop_id" domain="[('state', 'in', ['open'])]" options="{'no_create': True}"/>
+                                    <field name="comments"/>
+                                    <field name="extra_activity_id" options="{'no_create': True}"/>
+                                    <field name="extra_expense" sum="extra_expense_total"/>
+                                    <field name="extra_expense_activity_id" options="{'no_create': True}"/>
+                                    <field name="extra_expense_estate_id" options="{'no_create': True}"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Sábado">
+                            <field name="saturday_date" readonly="1" nolabel="1"/>
+                            <field name="saturday_employees_ids">
+                                <tree editable="bottom" string="Empleados" create="false" delete="false">
+                                    <field name="sequence" widget="handle"/>
+                                    <button type="action" name="%(action_print_work_day_saturday)d" string="Imprimir línea" icon="gtk-print" class="oe_highlight"/>
+                                    <field name="name" domain="[('active', '=', True)]"/>
+                                    <field name="employee_type" invisible="1"/>
+                                    <field name="attended" sum="total_attended" on_change="set_default_crop(1,0,0,0,0,attended,0,0)"/>
+                                    <field name="season_id" invisible="True"/>
+                                    <field name="attended_crop_id" domain="[('state', 'in', ['open'])]" options="{'no_create': True}"/>
+                                    <field name="time_in" widget="float_time" on_change="calculate_hours({'time_in': time_in, 'time_out': time_out})"/>
+                                    <field name="time_out" widget="float_time" on_change="calculate_hours({'time_in': time_in, 'time_out': time_out})"/>
+                                    <!-- Corte cultivo 1 -->
+                                    <field name="boxes_rasp1" sum="total_boxes_rasp1" invisible="context.get('hide_columns', False)" on_change="set_default_crop(2,boxes_rasp1,boxes_straw1,pots_rasp1,pots_straw1,0,0,0)"/>
+                                    <field name="boxes_straw1" sum="total_boxes_straw1" invisible="context.get('hide_columns', False)" on_change="set_default_crop(2,boxes_rasp1,boxes_straw1,pots_rasp1,pots_straw1,0,0,0)"/>
+                                    <field name="pots_rasp1" sum="total_pots_rasp1" invisible="context.get('hide_columns', False)" on_change="set_default_crop(2,boxes_rasp1,boxes_straw1,pots_rasp1,pots_straw1,0,0,0)"/>
+                                    <field name="pots_straw1" sum="total_pots_straw1" invisible="context.get('hide_columns', False)" on_change="set_default_crop(2,boxes_rasp1,boxes_straw1,pots_rasp1,pots_straw1,0,0,0)"/>
+                                    <field name="boxes_pots_crop_id1" domain="[('state', 'in', ['open'])]" options="{'no_create': True}" invisible="context.get('hide_columns', False)"/>
+                                    <!-- Corte cultivo 2 -->
+                                    <field name="boxes_rasp2" sum="total_boxes_rasp2" invisible="context.get('hide_columns', False)" on_change="set_default_crop(3,boxes_rasp2,boxes_straw2,pots_rasp2,pots_straw2,0,0,0)"/>
+                                    <field name="boxes_straw2" sum="total_boxes_straw2" invisible="context.get('hide_columns', False)" on_change="set_default_crop(3,boxes_rasp2,boxes_straw2,pots_rasp2,pots_straw2,0,0,0)"/>
+                                    <field name="pots_rasp2" sum="total_pots_rasp2" invisible="context.get('hide_columns', False)" on_change="set_default_crop(3,boxes_rasp2,boxes_straw2,pots_rasp2,pots_straw2,0,0,0)"/>
+                                    <field name="pots_straw2" sum="total_pots_straw2" invisible="context.get('hide_columns', False)" on_change="set_default_crop(3,boxes_rasp2,boxes_straw2,pots_rasp2,pots_straw2,0,0,0)"/>
+                                    <field name="boxes_pots_crop_id2" domain="[('state', 'in', ['open'])]" options="{'no_create': True}" invisible="context.get('hide_columns', False)"/>
+                                    <!-- Corte cultivo 3 -->
+                                    <field name="boxes_rasp3" sum="total_boxes_rasp3" invisible="context.get('hide_columns', False)" on_change="set_default_crop(4,boxes_rasp3,boxes_straw3,pots_rasp3,pots_straw3,0,0,0)"/>
+                                    <field name="boxes_straw3" sum="total_boxes_straw3" invisible="context.get('hide_columns', False)" on_change="set_default_crop(4,boxes_rasp3,boxes_straw3,pots_rasp3,pots_straw3,0,0,0)"/>
+                                    <field name="pots_rasp3" sum="total_pots_rasp3" invisible="context.get('hide_columns', False)" on_change="set_default_crop(4,boxes_rasp3,boxes_straw3,pots_rasp3,pots_straw3,0,0,0)"/>
+                                    <field name="pots_straw3" sum="total_pots_straw3" invisible="context.get('hide_columns', False)" on_change="set_default_crop(4,boxes_rasp3,boxes_straw3,pots_rasp3,pots_straw3,0,0,0)"/>
+                                    <field name="boxes_pots_crop_id3" domain="[('state', 'in', ['open'])]" options="{'no_create': True}" invisible="context.get('hide_columns', False)"/>
+                                    <field name="hours" sum="total_hours" widget="float_time" on_change="set_default_crop(5,0,0,0,0,0,hours,0)"/>
+                                    <field name="hours_crop_id" domain="[('state', 'in', ['open'])]" options="{'no_create': True}"/>
+                                    <field name="activity_id" options="{'no_create': True}"/>
+                                    <field name="extra_hours" sum="total_extra_hours" widget="float_time" on_change="set_default_crop(6,0,0,0,0,0,0,extra_hours)"/>
+                                    <field name="extra_hours_crop_id" domain="[('state', 'in', ['open'])]" options="{'no_create': True}"/>
+                                    <field name="comments"/>
+                                    <field name="extra_activity_id" options="{'no_create': True}"/>
+                                    <field name="extra_expense" sum="extra_expense_total"/>
+                                    <field name="extra_expense_activity_id" options="{'no_create': True}"/>
+                                    <field name="extra_expense_estate_id" options="{'no_create': True}"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Domingo">
+                            <field name="sunday_date" readonly="1" nolabel="1"/>
+                            <field name="sunday_employees_ids">
+                                <tree editable="bottom" string="Empleados" create="false" delete="false">
+                                    <field name="sequence" widget="handle"/>
+                                    <button type="action" name="%(action_print_work_day_sunday)d" string="Imprimir línea" icon="gtk-print" class="oe_highlight"/>
+                                    <field name="name" domain="[('active', '=', True)]"/>
+                                    <field name="employee_type" invisible="1"/>
+                                    <field name="attended" sum="total_attended" on_change="set_default_crop(1,0,0,0,0,attended,0,0)"/>
+                                    <field name="season_id" invisible="True"/>
+                                    <field name="attended_crop_id" domain="[('state', 'in', ['open'])]" options="{'no_create': True}"/>
+                                    <field name="time_in" widget="float_time" on_change="calculate_hours({'time_in': time_in, 'time_out': time_out})"/>
+                                    <field name="time_out" widget="float_time" on_change="calculate_hours({'time_in': time_in, 'time_out': time_out})"/>
+                                    <!-- Corte cultivo 1 -->
+                                    <field name="boxes_rasp1" sum="total_boxes_rasp1" invisible="context.get('hide_columns', False)" on_change="set_default_crop(2,boxes_rasp1,boxes_straw1,pots_rasp1,pots_straw1,0,0,0)"/>
+                                    <field name="boxes_straw1" sum="total_boxes_straw1" invisible="context.get('hide_columns', False)" on_change="set_default_crop(2,boxes_rasp1,boxes_straw1,pots_rasp1,pots_straw1,0,0,0)"/>
+                                    <field name="pots_rasp1" sum="total_pots_rasp1" invisible="context.get('hide_columns', False)" on_change="set_default_crop(2,boxes_rasp1,boxes_straw1,pots_rasp1,pots_straw1,0,0,0)"/>
+                                    <field name="pots_straw1" sum="total_pots_straw1" invisible="context.get('hide_columns', False)" on_change="set_default_crop(2,boxes_rasp1,boxes_straw1,pots_rasp1,pots_straw1,0,0,0)"/>
+                                    <field name="boxes_pots_crop_id1" domain="[('state', 'in', ['open'])]" options="{'no_create': True}" invisible="context.get('hide_columns', False)"/>
+                                    <!-- Corte cultivo 2 -->
+                                    <field name="boxes_rasp2" sum="total_boxes_rasp2" invisible="context.get('hide_columns', False)" on_change="set_default_crop(3,boxes_rasp2,boxes_straw2,pots_rasp2,pots_straw2,0,0,0)"/>
+                                    <field name="boxes_straw2" sum="total_boxes_straw2" invisible="context.get('hide_columns', False)" on_change="set_default_crop(3,boxes_rasp2,boxes_straw2,pots_rasp2,pots_straw2,0,0,0)"/>
+                                    <field name="pots_rasp2" sum="total_pots_rasp2" invisible="context.get('hide_columns', False)" on_change="set_default_crop(3,boxes_rasp2,boxes_straw2,pots_rasp2,pots_straw2,0,0,0)"/>
+                                    <field name="pots_straw2" sum="total_pots_straw2" invisible="context.get('hide_columns', False)" on_change="set_default_crop(3,boxes_rasp2,boxes_straw2,pots_rasp2,pots_straw2,0,0,0)"/>
+                                    <field name="boxes_pots_crop_id2" domain="[('state', 'in', ['open'])]" options="{'no_create': True}" invisible="context.get('hide_columns', False)"/>
+                                    <!-- Corte cultivo 3 -->
+                                    <field name="boxes_rasp3" sum="total_boxes_rasp3" invisible="context.get('hide_columns', False)" on_change="set_default_crop(4,boxes_rasp3,boxes_straw3,pots_rasp3,pots_straw3,0,0,0)"/>
+                                    <field name="boxes_straw3" sum="total_boxes_straw3" invisible="context.get('hide_columns', False)" on_change="set_default_crop(4,boxes_rasp3,boxes_straw3,pots_rasp3,pots_straw3,0,0,0)"/>
+                                    <field name="pots_rasp3" sum="total_pots_rasp3" invisible="context.get('hide_columns', False)" on_change="set_default_crop(4,boxes_rasp3,boxes_straw3,pots_rasp3,pots_straw3,0,0,0)"/>
+                                    <field name="pots_straw3" sum="total_pots_straw3" invisible="context.get('hide_columns', False)" on_change="set_default_crop(4,boxes_rasp3,boxes_straw3,pots_rasp3,pots_straw3,0,0,0)"/>
+                                    <field name="boxes_pots_crop_id3" domain="[('state', 'in', ['open'])]" options="{'no_create': True}" invisible="context.get('hide_columns', False)"/>
+                                    <field name="hours" sum="total_hours" widget="float_time" on_change="set_default_crop(5,0,0,0,0,0,hours,0)"/>
+                                    <field name="hours_crop_id" domain="[('state', 'in', ['open'])]" options="{'no_create': True}"/>
+                                    <field name="activity_id" options="{'no_create': True}"/>
+                                    <field name="extra_hours" sum="total_extra_hours" widget="float_time" on_change="set_default_crop(6,0,0,0,0,0,0,extra_hours)"/>
+                                    <field name="extra_hours_crop_id" domain="[('state', 'in', ['open'])]" options="{'no_create': True}"/>
+                                    <field name="comments"/>
+                                    <field name="extra_activity_id" options="{'no_create': True}"/>
+                                    <field name="extra_expense" sum="extra_expense_total"/>
+                                    <field name="extra_expense_activity_id" options="{'no_create': True}"/>
+                                    <field name="extra_expense_estate_id" options="{'no_create': True}"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Lunes">
+                            <field name="monday_date" readonly="1" nolabel="1"/>
+                            <field name="monday_employees_ids">
+                                <tree editable="bottom" string="Empleados" create="false" delete="false">
+                                    <!--<field name="hide_columns"/>-->
+                                    <field name="sequence" widget="handle"/>
+                                    <button type="action" name="%(action_print_work_day_monday)d" string="Imprimir línea" icon="gtk-print" class="oe_highlight"/>
+                                    <field name="name" domain="[('active', '=', True)]"/>
+                                    <field name="employee_type" invisible="1"/>
+                                    <field name="attended" sum="total_attended" on_change="set_default_crop(1,0,0,0,0,attended,0,0)"/>
+                                    <field name="season_id" invisible="True"/>
+                                    <field name="attended_crop_id" domain="[('state', 'in', ['open'])]" options="{'no_create': True}"/>
+                                    <field name="time_in" widget="float_time" on_change="calculate_hours({'time_in': time_in, 'time_out': time_out})"/>
+                                    <field name="time_out" widget="float_time" on_change="calculate_hours({'time_in': time_in, 'time_out': time_out})"/>
+                                    <!-- Corte cultivo 1 invisible="context.get('hide_columns', False)" -->
+                                    <field name="boxes_rasp1" sum="total_boxes_rasp1" invisible="context.get('hide_columns', False)" on_change="set_default_crop(2,boxes_rasp1,boxes_straw1,pots_rasp1,pots_straw1,0,0,0)"/>
+                                    <field name="boxes_straw1" sum="total_boxes_straw1" invisible="context.get('hide_columns', False)" on_change="set_default_crop(2,boxes_rasp1,boxes_straw1,pots_rasp1,pots_straw1,0,0,0)"/>
+                                    <field name="pots_rasp1" sum="total_pots_rasp1" invisible="context.get('hide_columns', False)" on_change="set_default_crop(2,boxes_rasp1,boxes_straw1,pots_rasp1,pots_straw1,0,0,0)"/>
+                                    <field name="pots_straw1" sum="total_pots_straw1" invisible="context.get('hide_columns', False)" on_change="set_default_crop(2,boxes_rasp1,boxes_straw1,pots_rasp1,pots_straw1,0,0,0)"/>
+                                    <field name="boxes_pots_crop_id1" domain="[('state', 'in', ['open'])]" options="{'no_create': True}" invisible="context.get('hide_columns', False)"/>
+                                    <!-- Corte cultivo 2 -->
+                                    <field name="boxes_rasp2" sum="total_boxes_rasp2" invisible="context.get('hide_columns', False)" on_change="set_default_crop(3,boxes_rasp2,boxes_straw2,pots_rasp2,pots_straw2,0,0,0)"/>
+                                    <field name="boxes_straw2" sum="total_boxes_straw2" invisible="context.get('hide_columns', False)" on_change="set_default_crop(3,boxes_rasp2,boxes_straw2,pots_rasp2,pots_straw2,0,0,0)"/>
+                                    <field name="pots_rasp2" sum="total_pots_rasp2" invisible="context.get('hide_columns', False)" on_change="set_default_crop(3,boxes_rasp2,boxes_straw2,pots_rasp2,pots_straw2,0,0,0)"/>
+                                    <field name="pots_straw2" sum="total_pots_straw2" invisible="context.get('hide_columns', False)" on_change="set_default_crop(3,boxes_rasp2,boxes_straw2,pots_rasp2,pots_straw2,0,0,0)"/>
+                                    <field name="boxes_pots_crop_id2" domain="[('state', 'in', ['open'])]" options="{'no_create': True}" invisible="context.get('hide_columns', False)"/>
+                                    <!-- Corte cultivo 3 -->
+                                    <field name="boxes_rasp3" sum="total_boxes_rasp3" invisible="context.get('hide_columns', False)" on_change="set_default_crop(4,boxes_rasp3,boxes_straw3,pots_rasp3,pots_straw3,0,0,0)"/>
+                                    <field name="boxes_straw3" sum="total_boxes_straw3" invisible="context.get('hide_columns', False)" on_change="set_default_crop(4,boxes_rasp3,boxes_straw3,pots_rasp3,pots_straw3,0,0,0)"/>
+                                    <field name="pots_rasp3" sum="total_pots_rasp3" invisible="context.get('hide_columns', False)" on_change="set_default_crop(4,boxes_rasp3,boxes_straw3,pots_rasp3,pots_straw3,0,0,0)"/>
+                                    <field name="pots_straw3" sum="total_pots_straw3" invisible="context.get('hide_columns', False)" on_change="set_default_crop(4,boxes_rasp3,boxes_straw3,pots_rasp3,pots_straw3,0,0,0)"/>
+                                    <field name="boxes_pots_crop_id3" domain="[('state', 'in', ['open'])]" options="{'no_create': True}" invisible="context.get('hide_columns', False)"/>
+                                    <field name="hours" sum="total_hours" widget="float_time" on_change="set_default_crop(5,0,0,0,0,0,hours,0)"/>
+                                    <field name="hours_crop_id" domain="[('state', 'in', ['open'])]" options="{'no_create': True}"/>
+                                    <field name="activity_id" options="{'no_create': True}"/>
+                                    <field name="extra_hours" sum="total_extra_hours" widget="float_time" on_change="set_default_crop(6,0,0,0,0,0,0,extra_hours)"/>
+                                    <field name="extra_hours_crop_id" domain="[('state', 'in', ['open'])]" options="{'no_create': True}"/>
+                                    <field name="comments"/>
+                                    <field name="extra_activity_id" options="{'no_create': True}"/>
+                                    <field name="extra_expense" sum="extra_expense_total"/>
+                                    <field name="extra_expense_activity_id" options="{'no_create': True}"/>
+                                    <field name="extra_expense_estate_id" options="{'no_create': True}"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Martes">
+                            <field name="tuesday_date" readonly="1" nolabel="1"/>
+                            <field name="tuesday_employees_ids">
+                                <tree editable="bottom" string="Empleados" create="false" delete="false">
+                                    <field name="sequence" widget="handle"/>
+                                    <button type="action" name="%(action_print_work_day_tuesday)d" string="Imprimir línea" icon="gtk-print" class="oe_highlight"/>
+                                    <field name="name" domain="[('active', '=', True)]"/>
+                                    <field name="employee_type" invisible="1"/>
+                                    <field name="attended" sum="total_attended" on_change="set_default_crop(1,0,0,0,0,attended,0,0)"/>
+                                    <field name="season_id" invisible="True"/>
+                                    <field name="attended_crop_id" domain="[('state', 'in', ['open'])]" options="{'no_create': True}"/>
+                                    <field name="time_in" widget="float_time" on_change="calculate_hours({'time_in': time_in, 'time_out': time_out})"/>
+                                    <field name="time_out" widget="float_time" on_change="calculate_hours({'time_in': time_in, 'time_out': time_out})"/>
+                                    <!-- Corte cultivo 1 -->
+                                    <field name="boxes_rasp1" sum="total_boxes_rasp1" invisible="context.get('hide_columns', False)" on_change="set_default_crop(2,boxes_rasp1,boxes_straw1,pots_rasp1,pots_straw1,0,0,0)"/>
+                                    <field name="boxes_straw1" sum="total_boxes_straw1" invisible="context.get('hide_columns', False)" on_change="set_default_crop(2,boxes_rasp1,boxes_straw1,pots_rasp1,pots_straw1,0,0,0)"/>
+                                    <field name="pots_rasp1" sum="total_pots_rasp1" invisible="context.get('hide_columns', False)" on_change="set_default_crop(2,boxes_rasp1,boxes_straw1,pots_rasp1,pots_straw1,0,0,0)"/>
+                                    <field name="pots_straw1" sum="total_pots_straw1" invisible="context.get('hide_columns', False)" on_change="set_default_crop(2,boxes_rasp1,boxes_straw1,pots_rasp1,pots_straw1,0,0,0)"/>
+                                    <field name="boxes_pots_crop_id1" domain="[('state', 'in', ['open'])]" options="{'no_create': True}" invisible="context.get('hide_columns', False)"/>
+                                    <!-- Corte cultivo 2 -->
+                                    <field name="boxes_rasp2" sum="total_boxes_rasp2" invisible="context.get('hide_columns', False)" on_change="set_default_crop(3,boxes_rasp2,boxes_straw2,pots_rasp2,pots_straw2,0,0,0)"/>
+                                    <field name="boxes_straw2" sum="total_boxes_straw2" invisible="context.get('hide_columns', False)" on_change="set_default_crop(3,boxes_rasp2,boxes_straw2,pots_rasp2,pots_straw2,0,0,0)"/>
+                                    <field name="pots_rasp2" sum="total_pots_rasp2" invisible="context.get('hide_columns', False)" on_change="set_default_crop(3,boxes_rasp2,boxes_straw2,pots_rasp2,pots_straw2,0,0,0)"/>
+                                    <field name="pots_straw2" sum="total_pots_straw2" invisible="context.get('hide_columns', False)" on_change="set_default_crop(3,boxes_rasp2,boxes_straw2,pots_rasp2,pots_straw2,0,0,0)"/>
+                                    <field name="boxes_pots_crop_id2" domain="[('state', 'in', ['open'])]" options="{'no_create': True}" invisible="context.get('hide_columns', False)"/>
+                                    <!-- Corte cultivo 3 -->
+                                    <field name="boxes_rasp3" sum="total_boxes_rasp3" invisible="context.get('hide_columns', False)" on_change="set_default_crop(4,boxes_rasp3,boxes_straw3,pots_rasp3,pots_straw3,0,0,0)"/>
+                                    <field name="boxes_straw3" sum="total_boxes_straw3" invisible="context.get('hide_columns', False)" on_change="set_default_crop(4,boxes_rasp3,boxes_straw3,pots_rasp3,pots_straw3,0,0,0)"/>
+                                    <field name="pots_rasp3" sum="total_pots_rasp3" invisible="context.get('hide_columns', False)" on_change="set_default_crop(4,boxes_rasp3,boxes_straw3,pots_rasp3,pots_straw3,0,0,0)"/>
+                                    <field name="pots_straw3" sum="total_pots_straw3" invisible="context.get('hide_columns', False)" on_change="set_default_crop(4,boxes_rasp3,boxes_straw3,pots_rasp3,pots_straw3,0,0,0)"/>
+                                    <field name="boxes_pots_crop_id3" domain="[('state', 'in', ['open'])]" options="{'no_create': True}" invisible="context.get('hide_columns', False)"/>
+                                    <field name="hours" sum="total_hours" widget="float_time" on_change="set_default_crop(5,0,0,0,0,0,hours,0)"/>
+                                    <field name="hours_crop_id" domain="[('state', 'in', ['open'])]" options="{'no_create': True}"/>
+                                    <field name="activity_id" options="{'no_create': True}"/>
+                                    <field name="extra_hours" sum="total_extra_hours" widget="float_time" on_change="set_default_crop(6,0,0,0,0,0,0,extra_hours)"/>
+                                    <field name="extra_hours_crop_id" domain="[('state', 'in', ['open'])]" options="{'no_create': True}"/>
+                                    <field name="comments"/>
+                                    <field name="extra_activity_id" options="{'no_create': True}"/>
+                                    <field name="extra_expense" sum="extra_expense_total"/>
+                                    <field name="extra_expense_activity_id" options="{'no_create': True}"/>
+                                    <field name="extra_expense_estate_id" options="{'no_create': True}"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Miércoles">
+                            <field name="wednesday_date" readonly="1" nolabel="1"/>
+                            <field name="wednesday_employees_ids">
+                                <tree editable="bottom" string="Empleados" create="false" delete="false">
+                                    <field name="sequence" widget="handle"/>
+                                    <button type="action" name="%(action_print_work_day_wednesday)d" string="Imprimir línea" icon="gtk-print" class="oe_highlight"/>
+                                    <field name="name" domain="[('active', '=', True)]"/>
+                                    <field name="employee_type" invisible="1"/>
+                                    <field name="attended" sum="total_attended" on_change="set_default_crop(1,0,0,0,0,attended,0,0)"/>
+                                    <field name="season_id" invisible="True"/>
+                                    <field name="attended_crop_id" domain="[('state', 'in', ['open'])]" options="{'no_create': True}"/>
+                                    <field name="time_in" widget="float_time" on_change="calculate_hours({'time_in': time_in, 'time_out': time_out})"/>
+                                    <field name="time_out" widget="float_time" on_change="calculate_hours({'time_in': time_in, 'time_out': time_out})"/>
+                                    <!-- Corte cultivo 1 -->
+                                    <field name="boxes_rasp1" sum="total_boxes_rasp1" invisible="context.get('hide_columns', False)" on_change="set_default_crop(2,boxes_rasp1,boxes_straw1,pots_rasp1,pots_straw1,0,0,0)"/>
+                                    <field name="boxes_straw1" sum="total_boxes_straw1" invisible="context.get('hide_columns', False)" on_change="set_default_crop(2,boxes_rasp1,boxes_straw1,pots_rasp1,pots_straw1,0,0,0)"/>
+                                    <field name="pots_rasp1" sum="total_pots_rasp1" invisible="context.get('hide_columns', False)" on_change="set_default_crop(2,boxes_rasp1,boxes_straw1,pots_rasp1,pots_straw1,0,0,0)"/>
+                                    <field name="pots_straw1" sum="total_pots_straw1" invisible="context.get('hide_columns', False)" on_change="set_default_crop(2,boxes_rasp1,boxes_straw1,pots_rasp1,pots_straw1,0,0,0)"/>
+                                    <field name="boxes_pots_crop_id1" domain="[('state', 'in', ['open'])]" options="{'no_create': True}" invisible="context.get('hide_columns', False)"/>
+                                    <!-- Corte cultivo 2 -->
+                                    <field name="boxes_rasp2" sum="total_boxes_rasp2" invisible="context.get('hide_columns', False)" on_change="set_default_crop(3,boxes_rasp2,boxes_straw2,pots_rasp2,pots_straw2,0,0,0)"/>
+                                    <field name="boxes_straw2" sum="total_boxes_straw2" invisible="context.get('hide_columns', False)" on_change="set_default_crop(3,boxes_rasp2,boxes_straw2,pots_rasp2,pots_straw2,0,0,0)"/>
+                                    <field name="pots_rasp2" sum="total_pots_rasp2" invisible="context.get('hide_columns', False)" on_change="set_default_crop(3,boxes_rasp2,boxes_straw2,pots_rasp2,pots_straw2,0,0,0)"/>
+                                    <field name="pots_straw2" sum="total_pots_straw2" invisible="context.get('hide_columns', False)" on_change="set_default_crop(3,boxes_rasp2,boxes_straw2,pots_rasp2,pots_straw2,0,0,0)"/>
+                                    <field name="boxes_pots_crop_id2" domain="[('state', 'in', ['open'])]" options="{'no_create': True}" invisible="context.get('hide_columns', False)"/>
+                                    <!-- Corte cultivo 3 -->
+                                    <field name="boxes_rasp3" sum="total_boxes_rasp3" invisible="context.get('hide_columns', False)" on_change="set_default_crop(4,boxes_rasp3,boxes_straw3,pots_rasp3,pots_straw3,0,0,0)"/>
+                                    <field name="boxes_straw3" sum="total_boxes_straw3" invisible="context.get('hide_columns', False)" on_change="set_default_crop(4,boxes_rasp3,boxes_straw3,pots_rasp3,pots_straw3,0,0,0)"/>
+                                    <field name="pots_rasp3" sum="total_pots_rasp3" invisible="context.get('hide_columns', False)" on_change="set_default_crop(4,boxes_rasp3,boxes_straw3,pots_rasp3,pots_straw3,0,0,0)"/>
+                                    <field name="pots_straw3" sum="total_pots_straw3" invisible="context.get('hide_columns', False)" on_change="set_default_crop(4,boxes_rasp3,boxes_straw3,pots_rasp3,pots_straw3,0,0,0)"/>
+                                    <field name="boxes_pots_crop_id3" domain="[('state', 'in', ['open'])]" options="{'no_create': True}" invisible="context.get('hide_columns', False)"/>
+                                    <field name="hours" sum="total_hours" widget="float_time" on_change="set_default_crop(5,0,0,0,0,0,hours,0)"/>
+                                    <field name="hours_crop_id" domain="[('state', 'in', ['open'])]" options="{'no_create': True}"/>
+                                    <field name="activity_id" options="{'no_cre00:00ate': True}"/>
+                                    <field name="extra_hours" sum="total_extra_hours" widget="float_time" on_change="set_default_crop(6,0,0,0,0,0,0,extra_hours)"/>
+                                    <field name="extra_hours_crop_id" domain="[('state', 'in', ['open'])]" options="{'no_create': True}"/>
+                                    <field name="comments"/>
+                                    <field name="extra_activity_id" options="{'no_create': True}"/>
+                                    <field name="extra_expense" sum="extra_expense_total"/>
+                                    <field name="extra_expense_activity_id" options="{'no_create': True}"/>
+                                    <field name="extra_expense_estate_id" options="{'no_create': True}"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Resumen">
+                            <field name="resume">
+                                <tree editable="bottom" string="Resumen" create="false" delete="false">
+                                    <field name="sequence" widget="handle"/>
+                                    <button type="action" name="%(action_print_work_day_resumen)d" string="Imprimir línea" icon="gtk-print" class="oe_highlight"/>
+                                    <field name="name" domain="[('active', '=', True)]"/>
+                                    <field name="employee_type" invisible="1"/>
+                                    <field name="total_attended" sum="total_attended"/>
+                                    <!-- Corte cultivo 1 -->
+                                    <field name="total_boxes_rasp1" sum="total_boxes_rasp1"/>
+                                    <field name="total_boxes_straw1" sum="total_boxes_straw1"/>
+                                    <field name="total_pots_rasp1" sum="total_pots_rasp1"/>
+                                    <field name="total_pots_straw1" sum="total_pots_straw1"/>
+                                    <!-- Corte cultivo 2  -->
+                                    <field name="total_boxes_rasp2" sum="total_boxes_rasp2"/>
+                                    <field name="total_boxes_straw2" sum="total_boxes_straw2"/>
+                                    <field name="total_pots_rasp2" sum="total_pots_rasp2"/>
+                                    <field name="total_pots_straw2" sum="total_pots_straw2"/>
+                                    <!-- Corte cultivo 3 -->
+                                    <field name="total_boxes_rasp3" sum="total_boxes_rasp3"/>
+                                    <field name="total_boxes_straw3" sum="total_boxes_straw3"/>
+                                    <field name="total_pots_rasp3" sum="total_pots_rasp3"/>
+                                    <field name="total_pots_straw3" sum="total_pots_straw3"/>
+                                    <field name="total_hours" sum="total_hours"/>
+                                    <field name="total_extra_hours" sum="total_extra_hours"/>
+                                    <field name="weekly_bonus" sum="sum_weekly_bonus"/>
+                                    <field name="loan_discount" sum="sum_loan_discount"/>
+                                    <field name="total_extra_expense" sum="sum_total_extra_expense"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action Attendance -->
+        <record id="hr_attendance_gaa_action" model="ir.actions.act_window">
+            <field name="name">Lista de asistencia</field>
+            <field name="res_model">hr.attendance.gaa</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'readonly_by_pass': True}</field>
+            <field name="help" type="xml">
+                <p class="oe_view_nocontent_create">Crear una lista de asistencia por cada semana de trabajo</p>
+            </field>
+        </record>
+
+        <!-- Action Print Word Day -->
+
+        <!-- Menu attendance -->
+        <menuitem action="hr_attendance_gaa_action" id="menu_attendance_gaa"
+                  parent="hr_payroll.menu_hr_payroll_root" groups="base.group_user"/>
+    </data>
+</odoo>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_print_work_day_resumen">
+            <style type="text/css">
+                .company-img img { width: 16em; height: 6em; }
+                .employee-info { font-size: 1.4em; text-align: center; margin-bottom: 20px; font-weight: bold; }
+                .qr-code { width: 11em; height: 11em; }
+                .concepts { font-size: 1.4em; }
+            </style>
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <div class="page">
+                        <div class="oe_structure"/>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="text-center">
+                                    <div class="company-img">
+                                        <img t-att-src="'data:image/png;base64,%s' % o.attendance_id.company_id.logo_web"/>
+                                    </div>
+                                </div>
+                                <div class="employee-info">
+                                    <span t-field="o.name.name"/><br/>
+                                    <span t-field="o.attendance_id.date_from"/> - <span t-field="o.attendance_id.date_to"/><br/>
+                                    <span t-field="o.attendance_id.name"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 concepts">
+                            <div class="row">
+                                Asistencias: <span t-field="o.total_attended"/>
+                            </div>
+                        </div>
+                        <div class="row concepts">
+                            <div class="col-xs-6">
+                                C. Fres: <span t-esc="o.total_boxes_straw1 + o.total_boxes_straw2 + o.total_boxes_straw3"/><br/>
+                                C. Fram: <span t-esc="o.total_boxes_rasp1 + o.total_boxes_rasp2 + o.total_boxes_rasp3"/><br/>
+                                <t t-if="o.total_extra_hours!=0">Hrs Ext: <span t-esc="o.total_extra_hours"/></t>
+                            </div>
+                            <div class="col-xs-6">
+                                B. Fres: <span t-esc="o.total_pots_straw1 + o.total_pots_straw2 + o.total_pots_straw3"/><br/>
+                                B. Fram: <span t-esc="o.total_pots_rasp1 + o.total_pots_rasp2 + o.total_pots_rasp3"/><br/>
+                                <t t-if="o.total_hours!=0">Horas: <span t-esc="o.total_hours"/></t>
+                            </div>
+                        </div>
+                        <div class="row col-xs-12 text-center">
+                            <img class="qr-code" t-att-src="'/report/barcode/QR/%s;%s;%s;%s;%s;%s;%s;%s;%s;%s' %
+                            (o.name.name,o.attendance_id.date_from,o.attendance_id.date_to,o.attendance_id.name,
+                             o.total_boxes_straw1 + o.total_boxes_straw2 + o.total_boxes_straw3,
+                             o.total_boxes_rasp1 + o.total_boxes_rasp2 + o.total_boxes_rasp3,
+                             o.total_pots_straw1 + o.total_pots_straw2 + o.total_pots_straw3,
+                             o.total_pots_rasp1 + o.total_pots_rasp2 + o.total_pots_rasp3,o.total_extra_hours,o.total_hours)"/>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

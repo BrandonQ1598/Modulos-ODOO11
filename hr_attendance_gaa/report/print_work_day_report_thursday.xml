@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_print_work_day_thursday">
+            <style type="text/css">
+                .company-img img { width: 16em; height: 6em; }
+                .employee-info { font-size: 1.4em; text-align: center; margin-bottom: 20px; font-weight: bold; }
+                .qr-code { width: 11em; height: 11em; }
+                .concepts { font-size: 1.4em; }
+            </style>
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <div class="page">
+                        <div class="oe_structure"/>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="text-center">
+                                    <div class="company-img">
+                                        <img t-att-src="'data:image/png;base64,%s' % o.attendance_id.company_id.logo_web"/>
+                                    </div>
+                                </div>
+                                <div class="employee-info">
+                                    <span t-field="o.name.name"/><br/>
+                                    <span t-field="o.date"/><br/>
+                                    <span t-field="o.attendance_id.name"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 concepts">
+                            <div class="row">
+                                Asistencia: <t t-if="o.attended==True">Si</t><t t-if="o.attended!=True">No</t>
+                            </div>
+                            <div class="row">
+                                Horario: <span t-esc="'%02d:%02d' % (int(str(o.time_in).split('.')[0]), int(float(str('%.2f' % o.time_in).split('.')[1])/100*60))"/>
+                                - <span t-esc="'%02d:%02d' % (int(str(o.time_out).split('.')[0]), int(float(str('%.2f' % o.time_out).split('.')[1])/100*60))"/>
+                            </div>
+                        </div>
+                        <div class="row concepts">
+                            <div class="col-xs-6">
+                                C. Fres: <span t-esc="o.boxes_straw1 + o.boxes_straw2 + o.boxes_straw3"/><br/>
+                                C. Fram: <span t-esc="o.boxes_rasp1 + o.boxes_rasp2 + o.boxes_rasp3"/><br/>
+                                <t t-if="o.extra_hours!=0">Hrs Ext: <span t-esc="o.extra_hours"/></t>
+                            </div>
+                            <div class="col-xs-6">
+                                B. Fres: <span t-esc="o.pots_straw1 + o.pots_straw2 + o.pots_straw3"/><br/>
+                                B. Fram: <span t-esc="o.pots_rasp1 + o.pots_rasp2 + o.pots_rasp3"/><br/>
+                                <t t-if="o.hours!=0">Horas: <span t-esc="o.hours"/></t>
+                            </div>
+                        </div>
+                        <div class="row col-xs-12 text-center">
+                            <img class="qr-code" t-att-src="'/report/barcode/QR/%s;%s;%s;%s;%s;%s;%s;%s;%s' %
+                            (o.name.name,o.date,o.attendance_id.name,o.boxes_straw1 + o.boxes_straw2 + o.boxes_straw3,
+                             o.boxes_rasp1 + o.boxes_rasp2 + o.boxes_rasp3,o.pots_straw1 + o.pots_straw2 + o.pots_straw3,
+                             o.pots_rasp1 + o.pots_rasp2 + o.pots_rasp3,o.extra_hours,o.hours)"/>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

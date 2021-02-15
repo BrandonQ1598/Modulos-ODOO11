@@ -1,0 +1,138 @@
+<odoo>
+    <data>
+        <template id="index">
+            <t t-call="website.layout">
+                <t t-set="title">Portal Web de Facturación</t>
+                <div class="container mt-5">
+                    <div class="row">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-6">
+                            <label class="text-primary h1">Ingresa el token de tu recibo</label>
+                            <form role="form" class="card p-3" method="post" action="/datosfactura" data-submit="/datosfactura">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <input type="text" name="token" class="form-control my-2" required="true"></input>
+                                <input type="submit" class="btn btn-primary mt8" value="Enviar"></input>
+                            </form>
+                        </div>
+                        <div class="col-md-3"></div>
+                    </div>
+                </div>
+            </t>
+        </template>
+        <template id="datosfactura">
+            <t t-call="website.layout">
+                <t t-set="title">Datos a facturar</t>
+                <div class="container mt-5">
+                    <div class="row">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-10">
+                            <label class="text-primary h1">Verificar los datos de la factura</label>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-4">
+                            <label class="text-primary h3">Cliente:</label>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="text-primary h3">Folio:</label>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="text-primary h3">Fecha:</label>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-10">
+                            <div class="card p-3">
+                                <table class="table table-stripped">
+                                    <thead>
+                                        <tr>
+                                            <td>Datos de la factura</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Codigo producto</td>
+                                            <td>Descripcion</td>
+                                            <td>Cantidad</td>
+                                            <td>Precio Unitario</td>
+                                            <td>Forma de Pago</td>
+                                            <td>Total</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <form role="form" method="post" action="/datosfacturacion" data-submit="/datosfacturacion">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <input type="submit" class="btn btn-success" value="Confirmar"></input>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+                </div>
+            </t>
+        </template>
+        <template id="datosfacturacion">
+            <t t-call="website.layout">
+                <t t-set="title">Ingresa tus datos de facturación</t>
+                 <div class="container mt-5">
+                    <div class="row">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-10">
+                            <div class="card p-3">
+                                <label class=" h1 text-primary">Ingresa tus datos de facturación</label>
+                                <form method="post">
+                                    <label>RFC</label>
+                                    <input type="text" class="form-control my-2" name="rfc" required="true" placeholder="Ingresar RFC"></input>
+                                    <label>Razon Social</label>
+                                    <input type="text" class="form-control my-2" name="razon_social" required="true" placeholder="Ingresar Razon Social"></input>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label>Codigo Postal</label>
+                                            <input type="number" class="form-control my-2" name="codigo_postal" required="true" placeholder="Ingresar Codigo Postal"></input>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>USO CFDI</label>
+                                            <select class="form-control my-2" name="cfdi" required="true" placeholder="CFDI">
+                                                <option value="G01">G01 - Adquisición de mercancías</option>
+                                                <option value="G02">G02 - Devoluciones, descuentos o bonificaciones</option>
+                                                <option value="G03">G03 - Gastos en general</option>
+                                                <option value="I01">I01 - Construcciones</option>
+                                                <option value="I02">I02 - Mobilario y equipo de oficina por inversiones</option>
+                                                <option value="I03">I03 - Equipo de transporte</option>
+                                                <option value="I04">I04 - Equipo de computo y accesorios</option>
+                                                <option value="I05">I05 - Dados, troqueles, moldes, matrices y herramental</option>
+                                                <option value="I06">I06 - Comunicaciones telefónicas</option>
+                                                <option value="I07">I07 - Comunicaciones satelitales</option>
+                                                <option value="I08">I08 - Otra maquinaria y equipo</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <label>Correo</label>
+                                    <input class="form-control my-2" type="email" placeholder="Ingresar correo" required="true"></input>
+                                    <br></br>
+                                    <input type="submit" class="btn btn-success my-3" value="Confirmar"></input>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+                </div>
+            </t>
+        </template>
+        <!--<record id="xmlReceiptFacturacion" model="ir.ui.view">
+            <field name="name">pos.order.xmlReceipt</field>
+            <field name="model">pos.order</field>
+            <field name="inherit_id" ref="XmlReceipt"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[class='after-footer']" position="before">
+                    <label>Para facturar dirijase al sitio www.facturacion.com/facturacion con el siguiente token: </label>
+                    <field name="token"></field>
+                </xpath>
+            </field>
+        </record>-->
+    </data>
+</odoo>

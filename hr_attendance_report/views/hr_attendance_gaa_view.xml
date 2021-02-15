@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="hr_attendance_gaa_inh" model="ir.ui.view">
+            <field name="name">hr.attendance.gaa.inh</field>
+            <field name="model">hr.attendance.gaa</field>
+            <field name="inherit_id" ref="hr_attendance_gaa.hr_attendance_gaa_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header/button[@name='action_canceled']" position="after">
+                    <button name="generate_daily_report" type="object" string="Reporte diario"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="hr_attendance_gaa_report" model="ir.ui.view">
+            <field name="name">hr.atttendance.gaa.report</field>
+            <field name="model">hr.attendance.gaa.report</field>
+            <field name="arch" type="xml">
+                <form string="Reporte generado">
+                    <h4><strong>Reporte generado</strong></h4><hr/>
+                    <div>De clic en el siguiente enlace para descargar el reporte de ventas acumuladas generado:</div>
+                    <group>
+                        <group>
+                            <field name="xlxs_report_filename" invisible="1"/>
+                            <field name="xlxs_report" nolabel="1" filename="xlxs_report_filename" widget="binary" attrs="{'readonly': True}"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button special="cancel" string="Cerrar" class="oe_highlight"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

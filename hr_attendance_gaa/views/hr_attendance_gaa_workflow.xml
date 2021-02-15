@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="hr_attendance_gaa_form_wk" model="ir.ui.view">
+            <field name="name">hr.attendance.gaa.form</field>
+            <field name="model">hr.attendance.gaa</field>
+            <field name="arch" type="xml">
+                <form string="Stock">
+                        <header>
+                            <button name="action_loaded" states="loaded" string="Cancelar" groups="base.group_user"/>
+                            <button name="action_canceled" states="confirmed,canceled" string="Cancelar" groups="base.group_user"/>
+                            <button name="action_done" states="draft,confirmed" string="Cerrar" groups="base.group_user"/>
+                            <button name="action_confirmed" states="confirmed,done" string="Abrir" groups="base.group_user"/>
+                            <button name="action_draft" states="draft,canceled" string="Borrador" groups="base.group_user"/>
+                            <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done,canceled"/>
+                        </header>
+                </form>
+            </field>
+        </record>
+        <!--
+        <record id="hr_attendance_gaa_wkf" model="workflow">
+            <field name="name">hr.attendance.gaa.wkf</field>
+            <field name="osv">hr.attendance.gaa</field>
+            <field name="on_create">True</field>
+        </record>-->
+
+        <!-- Action Draft
+        <record id="set_attendance_to_draft" model="ir.actions.server">
+            <field name="name">Set attendance to Draft</field>
+            <field name="model_id" ref="model_hr_attendance_gaa"/>
+            <field name="code">
+                model.search([('id', 'in', context['active_ids'])]).action_draft()
+            </field>
+        </record>
+
+        <record id="hr_attendance_gaa_draft" model="workflow.activity">
+            <field name="name">Draft</field>
+            <field name="wkf_id" ref="hr_attendance_gaa_wkf"/>
+            <field name="flow_start" eval="True"/>
+            <field name="kind">dummy</field>
+            <field name="action"></field>
+            <field name="action_id" ref="set_attendance_to_draft"/>
+        </record>
+
+         Action Loaded
+        <record id="set_attendance_to_loaded" model="ir.actions.server">
+            <field name="name">Set attendance to Loaded</field>
+            <field name="model_id" ref="model_hr_attendance_gaa"/>
+            <field name="code">
+                model.search([('id', 'in', context['active_ids'])]).action_loaded()
+            </field>
+        </record>
+
+        <record id="hr_attendance_gaa_loaded" model="workflow.activity">
+            <field name="name">Loaded</field>
+            <field name="wkf_id" ref="hr_attendance_gaa_wkf"/>
+            <field name="kind">dummy</field>
+            <field name="action"></field>
+            <field name="action_id" ref="set_attendance_to_loaded"/>
+        </record>
+
+        Action Confirmed
+        <record id="set_attendance_to_confirmed" model="ir.actions.server">
+            <field name="name">Set attendance to Confirmed</field>
+            <field name="model_id" ref="model_hr_attendance_gaa"/>
+            <field name="code">
+                model.search([('id', 'in', context['active_ids'])]).action_confirmed()
+            </field>
+        </record>
+
+        <record id="hr_attendance_gaa_confirmed" model="workflow.activity">
+            <field name="name">Confirmed</field>
+            <field name="wkf_id" ref="hr_attendance_gaa_wkf"/>
+            <field name="kind">dummy</field>
+            <field name="action"></field>
+            <field name="action_id" ref="set_attendance_to_confirmed"/>
+        </record>
+
+         Action Done
+        <record id="set_attendance_to_done" model="ir.actions.server">
+            <field name="name">Set attendance to Done</field>
+            <field name="model_id" ref="model_hr_attendance_gaa"/>
+            <field name="code">
+                model.search([('id', 'in', context['active_ids'])]).action_done()
+            </field>
+        </record>
+
+        <record id="hr_attendance_gaa_done" model="workflow.activity">
+            <field name="name">Done</field>
+            <field name="wkf_id" ref="hr_attendance_gaa_wkf"/>
+            <field name="flow_stop" eval="True"/>
+            <field name="kind">dummy</field>
+            <field name="action"></field>
+            <field name="action_id" ref="set_attendance_to_done"/>
+        </record>
+
+        Action Canceled
+        <record id="set_attendance_to_canceled" model="ir.actions.server">
+            <field name="name">Set attendance to Canceled</field>
+            <field name="model_id" ref="model_hr_attendance_gaa"/>
+            <field name="code">
+                model.search([('id', 'in', context['active_ids'])]).action_canceled()
+            </field>
+        </record>
+
+        <record id="hr_attendance_gaa_canceled" model="workflow.activity">
+            <field name="name">Canceled</field>
+            <field name="wkf_id" ref="hr_attendance_gaa_wkf"/>
+            <field name="flow_stop" eval="True"/>
+            <field name="kind">dummy</field>
+            <field name="action"></field>
+            <field name="action_id" ref="set_attendance_to_canceled"/>
+        </record>
+
+        Transitions
+        <record id="attendance_loaded_to_confirmed" model="workflow.transition">
+            <field name="act_from" ref="hr_attendance_gaa_loaded"/>
+            <field name="act_to" ref="hr_attendance_gaa_confirmed"/>
+            <field name="signal">confirmed</field>
+        </record>
+
+        <record id="attendance_draft_to_loaded" model="workflow.transition">
+            <field name="act_from" ref="hr_attendance_gaa_draft"/>
+            <field name="act_to" ref="hr_attendance_gaa_loaded"/>
+            <field name="signal">loaded</field>
+        </record>
+
+        <record id="attendance_confirmed_to_done" model="workflow.transition">
+            <field name="act_from" ref="hr_attendance_gaa_confirmed"/>
+            <field name="act_to" ref="hr_attendance_gaa_done"/>
+            <field name="signal">done</field>
+        </record>
+
+        <record id="attendance_draft_to_canceled" model="workflow.transition">
+            <field name="act_from" ref="hr_attendance_gaa_draft"/>
+            <field name="act_to" ref="hr_attendance_gaa_canceled"/>
+            <field name="signal">canceled</field>
+        </record>
+
+        <record id="attendance_loaded_to_canceled" model="workflow.transition">
+            <field name="act_from" ref="hr_attendance_gaa_loaded"/>
+            <field name="act_to" ref="hr_attendance_gaa_canceled"/>
+            <field name="signal">canceled</field>
+        </record>
+
+        <record id="attendance_confirmed_to_canceled" model="workflow.transition">
+            <field name="act_from" ref="hr_attendance_gaa_confirmed"/>
+            <field name="act_to" ref="hr_attendance_gaa_canceled"/>
+            <field name="signal">canceled</field>
+        </record>-->
+    </data>
+</odoo>

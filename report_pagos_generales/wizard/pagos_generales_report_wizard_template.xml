@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+        <record id="report_pagos_generales_wizard" model="ir.ui.view">
+                <field name="name">Reporte Pagos</field>
+                <field name="model">pagos.generales.report.wizard</field>
+                <field name="arch" type="xml">
+                    <form string="Reporte de pagos">
+                        <group>
+                            <group>
+                                <field name="start_date" string="Fecha de Inicio"/>
+                            </group>
+                            <group>
+                                <field name="end_date" string="Fecha Final"/>
+                            </group>
+                            <group>
+                                <field name="partner_type" string="Tipo" widget="radio"></field>
+                            </group>
+                            <group>
+                                <field name="cantidad" string="Para" widget="radio"></field>
+                                <field name="partner_id" string="" attrs="{'invisible': [('cantidad','=','Todos')]}"></field>
+                            </group>
+                        </group>
+                        <footer>
+                            <button name="get_report" string="Imprimir" type="object" class="oe_highlight"/>
+                            <button special="cancel" string="Cancelar"/>
+                        </footer>
+                    </form>
+                </field>
+            </record>
+
+            <act_window id="action_report_pagos_generales_wizard"
+                            name="Reporte wizard"
+                            res_model="pagos.generales.report.wizard"
+                            view_id="report_pagos_generales_wizard"
+                            view_mode="form"
+                            target="new"/>
+
+            <menuitem id="menu_report_pagos_generales_wizard"
+                      name="Reporte de Pagos Generales"
+                      action="action_report_pagos_generales_wizard"
+                      parent="account.menu_finance_legal_statement"
+                />
+</odoo>

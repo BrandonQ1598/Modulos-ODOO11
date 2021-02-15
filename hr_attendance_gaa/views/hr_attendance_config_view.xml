@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Search view Config -->
+        <record id="hr_attendance_config_search" model="ir.ui.view">
+            <field name="name">hr.attendance.config.search</field>
+            <field name="model">hr.attendance.config</field>
+            <field name="arch" type="xml">
+                <search string="Busqueda de configuraciones">
+                    <field name="name"/>
+                    <field name="time_in"/>
+                    <field name="time_out"/>
+                    <field name="time_in_sunday"/>
+                    <field name="time_out_sunday"/>
+                    <field name="active"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Search view order employee -->
+        <record id="hr_order_employee_search" model="ir.ui.view">
+            <field name="name">hr.order.employee.search</field>
+            <field name="model">hr.config.order.employee</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="active"/>
+                    <field name="attended"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Search view picking product -->
+        <record id="hr_picking_product_search" model="ir.ui.view">
+            <field name="name">hr.picking.product.search</field>
+            <field name="model">hr.config.picking.product</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="active"/>
+                    <field name="product_straw_id"/>
+                    <field name="box_straw_uom_id"/>
+                    <field name="pot_straw_uom_id"/>
+                    <field name="product_rasp_id"/>
+                    <field name="box_rasp_uom_id"/>
+                    <field name="pot_rasp_uom_id"/>
+                    <field name="workforce_attended_id"/>
+                    <field name="workforce_straw_box_id"/>
+                    <field name="workforce_rasp_box_id"/>
+                    <field name="workforce_straw_pot_id"/>
+                    <field name="workforce_rasp_pot_id"/>
+                    <field name="workforce_hour_id"/>
+                    <field name="workforce_extra_hour_id"/>
+                    <field name="warehouse_expense_id"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Tree view config -->
+        <record id="hr_attendance_config_tree" model="ir.ui.view">
+            <field name="name">hr.attendance.config.tree</field>
+            <field name="model">hr.attendance.config</field>
+            <field name="arch" type="xml">
+                <tree string="Registros de configuracion">
+                    <field name="name"/>
+                    <field name="time_in" widget="float_time"/>
+                    <field name="time_out" widget="float_time"/>
+                    <field name="time_in_sunday" widget="float_time"/>
+                    <field name="time_out_sunday" widget="float_time"/>
+                    <field name="min_limit" widget="float_time"/>
+                    <field name="max_limit" widget="float_time"/>
+                    <field name="bonus_amount"/>
+                    <field name="discount_amount"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Tree view order employee -->
+        <record id="hr_order_employee_view" model="ir.ui.view">
+            <field name="name">hr.order.employee.view</field>
+            <field name="model">hr.config.order.employee</field>
+            <field name="arch" type="xml">
+                <tree string="Tipos de empleados" editable="top">
+                    <field name="name"/>
+                    <field name="attended"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Tree view picking product -->
+        <record id="hr_config_picking_product_tree" model="ir.ui.view">
+            <field name="name">hr.config.picking.product.tree</field>
+            <field name="model">hr.config.picking.product</field>
+            <field name="arch" type="xml">
+                <tree string="Productos por defecto">
+                    <field name="name"/>
+                    <field name="active"/>
+                    <field name="product_straw_id"/>
+                    <field name="box_straw_uom_id"/>
+                    <field name="pot_straw_uom_id"/>
+                    <field name="product_rasp_id"/>
+                    <field name="box_rasp_uom_id"/>
+                    <field name="pot_rasp_uom_id"/>
+                    <field name="workforce_attended_id"/>
+                    <field name="warehouse_expense_id"/>
+                    <field name="workforce_bonus_id"/>
+                    <field name="workforce_extra_expense_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form view config -->
+        <record id="hr_attendance_config_form" model="ir.ui.view">
+            <field name="name">hr.attendance.config.form</field>
+            <field name="model">hr.attendance.config</field>
+            <field name="arch" type="xml">
+                <form string="Configuracion de lista de asistencia">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name" class="oe_inline"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <separator colspan="2" string="Lunes - Sábado"/>
+                                <field name="time_in" widget="float_time"/>
+                                <field name="time_out" widget="float_time"/>
+                                <separator colspan="2" string="Horario domingo"/>
+                                <field name="time_in_sunday" widget="float_time"/>
+                                <field name="time_out_sunday" widget="float_time"/>
+                            </group>
+                            <group>
+                                <separator colspan="2" string="Rangos para redeondeo"/>
+                                <field name="min_limit" widget="float_time"/>
+                                <field name="max_limit" widget="float_time"/>
+                                <separator colspan="2" string="Bono y Descuento"/>
+                                <field name="bonus_amount"/>
+                                <field name="discount_amount"/>
+                                <field name="active"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Form view picking product -->
+        <record id="hr_picking_product_form" model="ir.ui.view">
+            <field name="name">hr.picking.product.form</field>
+            <field name="model">hr.config.picking.product</field>
+            <field name="arch" type="xml">
+                <form string="Productos por defecto de lista de asistencia">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name" class="oe_inline"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <separator colspan="2" string="Productos de cosecha"/>
+                                <field name="product_straw_id" on_change="get_straw_uom_domain(product_straw_id)" options="{'no_create': True}"/>
+                                <field name="box_straw_uom_id" options="{'no_create': True}"/>
+                                <field name="pot_straw_uom_id" options="{'no_create': True}"/>
+                                <field name="product_rasp_id" on_change="get_rasp_uom_domain(product_rasp_id)" options="{'no_create': True}"/>
+                                <field name="box_rasp_uom_id" options="{'no_create': True}"/>
+                                <field name="pot_rasp_uom_id" options="{'no_create': True}"/>
+                                <field name="active"/>                                
+                            </group>
+                            <group>
+                                <separator colspan="2" string="Productos de gastos (mano de obra)"/>
+                                <field name="warehouse_expense_id" options="{'no_create': True}"/>
+                                <field name="workforce_attended_id" options="{'no_create': True}"/>
+                                <field name="workforce_straw_box_id" options="{'no_create': True}"/>
+                                <field name="workforce_rasp_box_id" options="{'no_create': True}"/>
+                                <field name="workforce_straw_pot_id" options="{'no_create': True}"/>
+                                <field name="workforce_rasp_pot_id" options="{'no_create': True}"/>
+                                <field name="workforce_hour_id" options="{'no_create': True}"/>
+                                <field name="workforce_extra_hour_id" options="{'no_create': True}"/>
+                                <field name="workforce_bonus_id" option="{'no_create': True}"/>
+                                <field name="workforce_extra_expense_id" option="{'no_create': True}"/>
+                            </group>
+                        </group>
+                        <field name="notes"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action config -->
+        <record id="hr_attendance_config_action" model="ir.actions.act_window">
+            <field name="name">Lista de asistencia</field>
+            <field name="res_model">hr.attendance.config</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="xml">
+                <p class="or_view_nocontent_create">
+                    Crear un registro de configuracion para el modulo de Recursos Humanos, solo el registro con la configuracion actual debe estar activo.
+                </p>
+            </field>
+        </record>
+
+        <!-- Action order employee -->
+        <record id="hr_order_employee_action" model="ir.actions.act_window">
+            <field name="name">Tipo de empleados</field>
+            <field name="res_model">hr.config.order.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="help" type="xml">
+                <p class="oe_view_nocontent_create">
+                    Crear nuevos tipos de empleados para establecer el orden en que aparecerán los empleados
+                    en la lista de asistencia
+                </p>
+            </field>
+        </record>
+
+        <!-- Action picking product -->
+        <record id="hr_picking_product_action" model="ir.actions.act_window">
+            <field name="name">Productos por defecto</field>
+            <field name="res_model">hr.config.picking.product</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="xml">
+                <p class="or_view_nocontent_create">
+                    Crear registro para definir los productos por defecto para la lista de asistencia.
+                </p>
+            </field>
+        </record>
+
+        <!-- Activity list Tree & Form view -->
+        <record id="hr_attendance_activity_list_tree" model="ir.ui.view">
+            <field name="name">hr.attendance.activity.list.tree</field>
+            <field name="model">hr.attendance.activity.list</field>
+            <field name="arch" type="xml">
+                <tree string="Actividades de trabajo" editable="top">
+                    <field name="name"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Activity list Action -->
+        <record id="hr_attendance_activity_list_action" model="ir.actions.act_window">
+            <field name="name">Actividades de trabajo</field>
+            <field name="res_model">hr.attendance.activity.list</field>
+            <field name="view_mode">tree</field>
+            <field name="view_type">form</field>
+        </record>
+
+
+        <!-- Menu config -->
+        <menuitem name="Personalizadas" id="attendance_configuration_menu"
+                  parent="hr.menu_human_resources_configuration" groups="base.group_user"/>
+        <menuitem action="hr_attendance_config_action" id="attendance_options_config" sequence="1"
+                  parent="attendance_configuration_menu" groups="base.group_user"/>
+
+        <!-- Menú order employee -->
+        <menuitem action="hr_order_employee_action" id="order_employee_config" sequence="2"
+                  parent="attendance_configuration_menu" groups="base.group_user"/>
+        <!-- Menú picking product -->
+        <menuitem action="hr_picking_product_action" id="picking_product_menu" sequence="3"
+                  parent="attendance_configuration_menu" groups="base.group_user"/>
+        <!-- Menú activity list -->
+        <menuitem action="hr_attendance_activity_list_action" id="activity_list_menu" sequence="4"
+                  parent="attendance_configuration_menu" groups="base.group_user"/>
+    </data>
+</odoo>

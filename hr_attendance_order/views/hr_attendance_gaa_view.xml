@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="hr_attendance_gaa_seq_inh" model="ir.ui.view">
+            <field name="name">hr.attendance.gaa.seq.inh</field>
+            <field name="model">hr.attendance.gaa</field>
+            <field name="inherit_id" ref="hr_attendance_gaa.hr_attendance_gaa_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='count_employees']" position="after">
+                    <button name="update_sequence" class="oe_inline" type="object" string="Actualizar orden"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

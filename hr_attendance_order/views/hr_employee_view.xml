@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <!-- Tree view for attendance order -->
+        <record id="hr_employee_seq_inh" model="ir.ui.view">
+            <field name="name">hr.employee.seq.inh</field>
+            <field name="model">hr.employee</field>
+            <field name="arch" type="xml">
+                <tree string="Listado de Empleados" name="employees" editable="top"
+                      create="false" default_order="sequence asc">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="job_id"/>
+                    <field name="employee_type"/>
+                    <field name="bank_account_id"/>
+                    <field name="address_home_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Tree view action for attendance order -->
+        <record id="hr_employee_seq_inh_action" model="ir.actions.act_window">
+            <field name="name">Orden de empleados</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_id" ref="hr_employee_seq_inh"/>
+            <field name="context">{'tree_view_ref': 'hr_employee_seq_inh'}</field>
+            <field name="view_mode">tree</field>
+            <field name="view_type">form</field>
+            <field name="limit">100</field>
+        </record>
+
+        <!-- Agregar a la acción original de empleados las propiedades:
+            Ref. Vista(view_id): hr.employee.tree
+            Valor de contexto (context): {'tree_view_ref': 'view_employee_tree'} -->
+
+        <menuitem id="employee_seq_inh" string="Orden de empleados" parent="hr.menu_hr_main"
+                  sequence="5" action="hr_employee_seq_inh_action" groups="base.group_user"/>
+
+        <!-- Tree view for Contract to modify prices -->
+        <record id="hr_contract_prices_tree" model="ir.ui.view">
+            <field name="name">hr.contract.prices.tree</field>
+            <field name="model">hr.contract</field>
+            <field name="arch" type="xml">
+                <tree string="Pagos por empleado" name="contracts" editable="top"
+                      create="false" default_order="name asc">
+                    <field name="name"/>
+                    <field name="wage"/>
+                    <!--<field name="salary_per_box_rasp"/>
+                    <field name="salary_per_box_straw"/>
+                    <field name="salary_per_pot_rasp"/>
+                    <field name="salary_per_pot_straw"/>
+                    <field name="salary_per_hour"/>
+                    <field name="salary_per_extra_hour"/>-->
+                </tree>
+            </field>
+        </record>
+
+        <!-- Tre view action for Contract to modify prices -->
+        <record id="hr_contract_prices_action" model="ir.actions.act_window">
+            <field name="name">Pagos de empleados</field>
+            <field name="res_model">hr.contract</field>
+            <field name="view_mode">tree</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="hr_contract_prices_tree"/>
+            <field name="context">{'tree_view_ref': 'hr_contract_prices_tree'}</field>
+            <field name="limit">100</field>
+        </record>
+
+        <!-- Agregar atributos a la acción de contratos para establecer la vista lista por defecto -->
+        <record id="hr_contract.action_hr_contract" model="ir.actions.act_window">
+            <field name="view_id" ref="hr_contract.hr_contract_view_tree"/>
+            <field name="context">{'tree_view_ref': 'hr_contract.hr_contract_view_tree'}</field>
+        </record>
+
+        <menuitem id="contract_prices_menu" string="Pagos de empleados" parent="hr.menu_hr_main"
+                  sequence="6" action="hr_contract_prices_action" groups="base.group_user"/>
+    </data>
+</odoo>

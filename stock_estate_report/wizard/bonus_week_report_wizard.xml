@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="estate_bonus_week_report" model="ir.ui.view">
+            <field name="name">Attendance Bonus Week Report</field>
+            <field name="model">stock.estate.bonus.week.report</field>
+            <field name="arch" type="xml">
+                <form string="Reporte de bonificacion">
+                    <group col="4" string="Filtros">
+                        <field name="season_id" on_change="get_domain_attendance_week(season_id)"/>
+                        <field name="estate_id" domain="[('is_estate', '=', True), ('active', '=', True)]"/>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                    <group>
+                        <field name="attendance_ids" string="Listas de asistencia"/>
+                    </group>
+                    <footer>
+                        <button name="print_bonus_week_report" type="object" string="Generar reporte" class="oe_highlight"/>
+                        o
+                        <button string="Cancelar" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="estate_bonus_week_action" model="ir.actions.act_window">
+            <field name="name">Reporte de bonificacion semanal</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.estate.bonus.week.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="report_main_menu" parent="stock_estate.estate_main_menu" name="Reportes" sequence="2"/>
+        <menuitem id="bonus_week_report_menu" parent="report_main_menu" action="estate_bonus_week_action" sequence="1"/>
+    </data>
+</odoo>

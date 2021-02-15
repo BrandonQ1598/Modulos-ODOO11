@@ -1,0 +1,490 @@
+<odoo>
+    <data>
+        <report id="report_mapa_carga"
+                        string="Reporte de Mapa de Carga"
+                        model="sale.order"
+                        report_type="qweb-pdf"
+                        name="report_mapa_carga.report_mapa_carga_template"
+                />
+        <template id="report_mapa_carga_template">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <style type="text/css">
+                                         <![CDATA[
+                                        @font-face {
+                                            font-family: 'abadi';
+                                            src: url('report_mapa_carga/static/src/font/abadi-mt.ttf') format('truetype');
+                                        }
+                                        #titulo{
+                                            font-family: abadi;
+                                            font-weight: bold;
+                                            font-size: 20px;
+                                            }
+                                        .linea{
+                                            text-align:center;h
+                                            border-bottom: 1px solid black;
+                                            }
+                                        .division{
+                                            padding: 5px;
+                                            border-bottom: 2px solid black;
+                                        }
+                                        .caja{
+                                            font-family: abadi;
+                                            margin-left:50px;
+                                            border: 1px solid black;
+                                            border-radius: 5px;
+                                        }
+                                        .fila{
+                                            margin-top:10px;
+                                            margin-rigth:10px;
+                                        }
+                                        .firmas{
+                                            margin-top:40px;
+                                        }
+                                        .lineaS{
+                                            text-align: center;
+                                            border-top: 1px solid black;
+                                        }
+                                                ]]>
+                                    </style>
+                        <div class="row">
+                                        <div class="col-xs-4">
+                                        </div>
+                                        <div class="col-xs-4">
+                                            <label class="h4" id="titulo"><strong> PALLET POSITION LIST</strong></label>
+                                        </div>
+                                        <div class="col-xs-4">
+                                        </div>
+                        </div>
+                        <div class="row division">
+                            <div class="col-xs-5">
+                                <table>
+                                    <tr>
+                                        <td>FLETERA:</td>
+                                        <td class="linea">Fletes X</td>
+                                    </tr>
+                                    <tr>
+                                        <td>OPERADOR:</td>
+                                        <td class="linea"> Francisco Juarez</td>
+                                    </tr>
+                                    <tr>
+                                        <td>TELEFONO:</td>
+                                        <td class="linea">7151037416</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-xs-4">
+                                <table>
+                                    <tr>
+                                        <td>N°FLETE:</td>
+                                        <td class="linea">2</td>
+                                    </tr>
+                                    <tr>
+                                        <td>CAJA:</td>
+                                        <td class="linea">2</td>
+                                    </tr>
+                                    <tr>
+                                        <td>CAMION:</td>
+                                        <td class="linea">2</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-xs-3">
+                                <table>
+                                    <tr>
+                                        <td>FECHA:</td>
+                                        <td class="linea">24/11/2020</td>
+                                    </tr>
+                                    <tr>
+                                        <td>PLACAS:</td>
+                                        <td class="linea">R5A67S</td>
+                                    </tr>
+                                    <tr>
+                                        <td>PLACAS:</td>
+                                        <td class="linea">T9U4O3</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row fila">
+                            <div class="col-xs-5 caja">
+                                <div class="row">
+                                    <div class="col-xs-6">POSITION:</div>
+                                    <div class="col-xs-6">TEMP:</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">PALLET:</div>
+                                    <div class="col-xs-6">THERMO:(    )</div>
+                                </div>
+                            </div>
+                            <div class="col-xs-5 caja">
+                                <div class="row">
+                                    <div class="col-xs-6">POSITION:</div>
+                                    <div class="col-xs-6">TEMP:</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">PALLET:</div>
+                                    <div class="col-xs-6">THERMO:(    )</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row fila">
+                            <div class="col-xs-5 caja">
+                                <div class="row">
+                                    <div class="col-xs-6">POSITION:</div>
+                                    <div class="col-xs-6">TEMP:</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">PALLET:</div>
+                                    <div class="col-xs-6">THERMO:(    )</div>
+                                </div>
+                            </div>
+                            <div class="col-xs-5 caja">
+                                <div class="row">
+                                    <div class="col-xs-6">POSITION:</div>
+                                    <div class="col-xs-6">TEMP:</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">PALLET:</div>
+                                    <div class="col-xs-6">THERMO:(    )</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row fila">
+                            <div class="col-xs-5 caja">
+                                <div class="row">
+                                    <div class="col-xs-6">POSITION:</div>
+                                    <div class="col-xs-6">TEMP:</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">PALLET:</div>
+                                    <div class="col-xs-6">THERMO:(    )</div>
+                                </div>
+                            </div>
+                            <div class="col-xs-5 caja">
+                                <div class="row">
+                                    <div class="col-xs-6">POSITION:</div>
+                                    <div class="col-xs-6">TEMP:</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">PALLET:</div>
+                                    <div class="col-xs-6">THERMO:(    )</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row fila">
+                            <div class="col-xs-5 caja">
+                                <div class="row">
+                                    <div class="col-xs-6">POSITION:</div>
+                                    <div class="col-xs-6">TEMP:</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">PALLET:</div>
+                                    <div class="col-xs-6">THERMO:(    )</div>
+                                </div>
+                            </div>
+                            <div class="col-xs-5 caja">
+                                <div class="row">
+                                    <div class="col-xs-6">POSITION:</div>
+                                    <div class="col-xs-6">TEMP:</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">PALLET:</div>
+                                    <div class="col-xs-6">THERMO:(    )</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row fila">
+                            <div class="col-xs-5 caja">
+                                <div class="row">
+                                    <div class="col-xs-6">POSITION:</div>
+                                    <div class="col-xs-6">TEMP:</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">PALLET:</div>
+                                    <div class="col-xs-6">THERMO:(    )</div>
+                                </div>
+                            </div>
+                            <div class="col-xs-5 caja">
+                                <div class="row">
+                                    <div class="col-xs-6">POSITION:</div>
+                                    <div class="col-xs-6">TEMP:</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">PALLET:</div>
+                                    <div class="col-xs-6">THERMO:(    )</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row fila">
+                            <div class="col-xs-5 caja">
+                                <div class="row">
+                                    <div class="col-xs-6">POSITION:</div>
+                                    <div class="col-xs-6">TEMP:</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">PALLET:</div>
+                                    <div class="col-xs-6">THERMO:(    )</div>
+                                </div>
+                            </div>
+                            <div class="col-xs-5 caja">
+                                <div class="row">
+                                    <div class="col-xs-6">POSITION:</div>
+                                    <div class="col-xs-6">TEMP:</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">PALLET:</div>
+                                    <div class="col-xs-6">THERMO:(    )</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row fila">
+                            <div class="col-xs-5 caja">
+                                <div class="row">
+                                    <div class="col-xs-6">POSITION:</div>
+                                    <div class="col-xs-6">TEMP:</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">PALLET:</div>
+                                    <div class="col-xs-6">THERMO:(    )</div>
+                                </div>
+                            </div>
+                            <div class="col-xs-5 caja">
+                                <div class="row">
+                                    <div class="col-xs-6">POSITION:</div>
+                                    <div class="col-xs-6">TEMP:</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">PALLET:</div>
+                                    <div class="col-xs-6">THERMO:(    )</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row fila">
+                            <div class="col-xs-5 caja">
+                                <div class="row">
+                                    <div class="col-xs-6">POSITION:</div>
+                                    <div class="col-xs-6">TEMP:</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">PALLET:</div>
+                                    <div class="col-xs-6">THERMO:(    )</div>
+                                </div>
+                            </div>
+                            <div class="col-xs-5 caja">
+                                <div class="row">
+                                    <div class="col-xs-6">POSITION:</div>
+                                    <div class="col-xs-6">TEMP:</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">PALLET:</div>
+                                    <div class="col-xs-6">THERMO:(    )</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row fila">
+                            <div class="col-xs-5 caja">
+                                <div class="row">
+                                    <div class="col-xs-6">POSITION:</div>
+                                    <div class="col-xs-6">TEMP:</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">PALLET:</div>
+                                    <div class="col-xs-6">THERMO:(    )</div>
+                                </div>
+                            </div>
+                            <div class="col-xs-5 caja">
+                                <div class="row">
+                                    <div class="col-xs-6">POSITION:</div>
+                                    <div class="col-xs-6">TEMP:</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">PALLET:</div>
+                                    <div class="col-xs-6">THERMO:(    )</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row fila">
+                            <div class="col-xs-5 caja">
+                                <div class="row">
+                                    <div class="col-xs-6">POSITION:</div>
+                                    <div class="col-xs-6">TEMP:</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">PALLET:</div>
+                                    <div class="col-xs-6">THERMO:(    )</div>
+                                </div>
+                            </div>
+                            <div class="col-xs-5 caja">
+                                <div class="row">
+                                    <div class="col-xs-6">POSITION:</div>
+                                    <div class="col-xs-6">TEMP:</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">PALLET:</div>
+                                    <div class="col-xs-6">THERMO:(    )</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row fila">
+                            <div class="col-xs-5 caja">
+                                <div class="row">
+                                    <div class="col-xs-6">POSITION:</div>
+                                    <div class="col-xs-6">TEMP:</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">PALLET:</div>
+                                    <div class="col-xs-6">THERMO:(    )</div>
+                                </div>
+                            </div>
+                            <div class="col-xs-5 caja">
+                                <div class="row">
+                                    <div class="col-xs-6">POSITION:</div>
+                                    <div class="col-xs-6">TEMP:</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">PALLET:</div>
+                                    <div class="col-xs-6">THERMO:(    )</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row fila">
+                            <div class="col-xs-5 caja">
+                                <div class="row">
+                                    <div class="col-xs-6">POSITION:</div>
+                                    <div class="col-xs-6">TEMP:</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">PALLET:</div>
+                                    <div class="col-xs-6">THERMO:(    )</div>
+                                </div>
+                            </div>
+                            <div class="col-xs-5 caja">
+                                <div class="row">
+                                    <div class="col-xs-6">POSITION:</div>
+                                    <div class="col-xs-6">TEMP:</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">PALLET:</div>
+                                    <div class="col-xs-6">THERMO:(    )</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row fila">
+                            <div class="col-xs-5 caja">
+                                <div class="row">
+                                    <div class="col-xs-6">POSITION:</div>
+                                    <div class="col-xs-6">TEMP:</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">PALLET:</div>
+                                    <div class="col-xs-6">THERMO:(    )</div>
+                                </div>
+                            </div>
+                            <div class="col-xs-5 caja">
+                                <div class="row">
+                                    <div class="col-xs-6">POSITION:</div>
+                                    <div class="col-xs-6">TEMP:</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">PALLET:</div>
+                                    <div class="col-xs-6">THERMO:(    )</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row fila">
+                            <div class="col-xs-5 caja">
+                                <div class="row">
+                                    <div class="col-xs-6">POSITION:</div>
+                                    <div class="col-xs-6">TEMP:</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">PALLET:</div>
+                                    <div class="col-xs-6">THERMO:(    )</div>
+                                </div>
+                            </div>
+                            <div class="col-xs-5 caja">
+                                <div class="row">
+                                    <div class="col-xs-6">POSITION:</div>
+                                    <div class="col-xs-6">TEMP:</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">PALLET:</div>
+                                    <div class="col-xs-6">THERMO:(    )</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row fila">
+                            <div class="col-xs-5 caja">
+                                <div class="row">
+                                    <div class="col-xs-6">POSITION:</div>
+                                    <div class="col-xs-6">TEMP:</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">PALLET:</div>
+                                    <div class="col-xs-6">THERMO:(    )</div>
+                                </div>
+                            </div>
+                            <div class="col-xs-5 caja">
+                                <div class="row">
+                                    <div class="col-xs-6">POSITION:</div>
+                                    <div class="col-xs-6">TEMP:</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">PALLET:</div>
+                                    <div class="col-xs-6">THERMO:(    )</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row fila">
+                            <div class="col-xs-5 caja">
+                                <div class="row">
+                                    <div class="col-xs-6">POSITION:</div>
+                                    <div class="col-xs-6">TEMP:</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">PALLET:</div>
+                                    <div class="col-xs-6">THERMO:(    )</div>
+                                </div>
+                            </div>
+                            <div class="col-xs-5 caja">
+                                <div class="row">
+                                    <div class="col-xs-6">POSITION:</div>
+                                    <div class="col-xs-6">TEMP:</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">PALLET:</div>
+                                    <div class="col-xs-6">THERMO:(    )</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row firmas">
+                            <div class="col-xs-2"></div>
+                            <div class="col-xs-3 lineaS">EMBARQUES</div>
+                            <div class="col-xs-2"></div>
+                            <div class="col-xs-3 lineaS">OPERADOR</div>
+                            <div class="col-xs-2"></div>
+                        </div>
+                    </div>
+                    <div class="footer o_standard_footer" style="border-top: 1px solid black;">
+                                    <div class="row text-center">
+                                        <div class="col col-12 text-center">
+                                            <ul class="list-inline">
+                                                <li class="list-inline-item">Page:</li>
+                                                <li class="list-inline-item">
+                                                    <span class="page"/>
+                                                </li>
+                                                <li class="list-inline-item">/</li>
+                                                <li class="list-inline-item">
+                                                    <span class="topage"/>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                    </t>
+            </t>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Search view Temporada -->
+        <record id="stock_estate_season_search" model="ir.ui.view">
+            <field name="name">stock.estate.season.search</field>
+            <field name="model">stock.estate.season</field>
+            <field name="arch" type="xml">
+                <search string="Búsqueda Temporadas">
+                    <field name="name"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="state"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Tree view Temporada -->
+        <record id="stock_estate_season_tree" model="ir.ui.view">
+            <field name="name">stock.estate.season.tree</field>
+            <field name="model">stock.estate.season</field>
+            <field name="arch" type="xml">
+                <tree string="Vista de temporadas">
+                    <field name="name"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="estate_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form view Temporada -->
+        <record id="stock_estate_season_form" model="ir.ui.view">
+            <field name="name">stock.estate.season.form</field>
+            <field name="model">stock.estate.season</field>
+            <field name="arch" type="xml">
+                <form string="Formulario temporada">
+                    <header>
+                        <button name="action_open" type="object" string="Abrir" states="draft" class="oe_highlight"
+                                confirm="Esta seguro(a), que desea marcar como abierto la temporada actual?"/>
+                        <button name="action_closed" type="object" string="Cerrar" states="open" class="oe_highlight"
+                                confirm="Esta seguro(a), que desea marcar como cerrada la temporada actual?"/>
+                        <button name="action_canceled" type="object" string="Cancelar" states="draft,open"
+                                confirm="Esta seguro(a), que desea marcar como cancelada la temporada actual?"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,open,closed"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" string="Nombre temporada" class="oe_edit_only"/>
+                            <h1><field name="name"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <label for="start_date" string="Período de la temporada"/>
+                                <div><field name="start_date" class="oe_inline"/> - <field name="end_date" class="oe_inline"/></div>
+                            </group>
+                        </group>
+                        <group name="estates" string="Predios">
+                            <field name="estate_id" options="{'no_open': True}" nolabel="1"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action temporada -->
+        <record id="action_stock_estate_season" model="ir.actions.act_window">
+            <field name="name">Temporada</field>
+            <field name="res_model">stock.estate.season</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Crear una nueva temporada para administrar predios y gastos...
+                </p>
+            </field>
+        </record>
+
+        <!-- Menús del módulo Temporada -->
+        <menuitem action="action_stock_estate_season" id="menu_stock_season_tree" parent="estate_configuration_main" sequence="1"/>
+    </data>
+</odoo>

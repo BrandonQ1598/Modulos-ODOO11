@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <!-- Formulario Almácenes -->
+        <record id="stock_warehouse_company_form_inh" model="ir.ui.view">
+            <field name="name">stock.warehouse.company.form.inh</field>
+            <field name="model">stock.warehouse</field>
+            <field name="inherit_id" ref="stock.view_warehouse"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/sheet/group/group/field[@name='code']" position="after">
+                    <field name="company_hg_id" options="{'no_create': True}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="stock_warehouse_company_hg_tree_inh" model="ir.ui.view">
+            <field name="name">stock.warehouse.company.hg.tree.inh</field>
+            <field name="model">stock.warehouse</field>
+            <field name="inherit_id" ref="stock.view_warehouse_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="before">
+                    <field name="company_hg_id"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Formulario Ubicaciones -->
+        <record id="stock_location_company_form_inh" model="ir.ui.view">
+            <field name="name">stock.location.company.form.inh</field>
+            <field name="model">stock.location</field>
+            <field name="inherit_id" ref="stock.view_location_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/group/group/field[@name='active']" position="after">
+                    <field name="company_hg_id" options="{'no_create': True}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="stock_location_company_hg_tree_inh" model="ir.ui.view">
+            <field name="name">stock.location.company.hg.tree.inh</field>
+            <field name="model">stock.location</field>
+            <field name="inherit_id" ref="stock.view_location_tree2"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='usage']" position="after">
+                    <field name="company_hg_id"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

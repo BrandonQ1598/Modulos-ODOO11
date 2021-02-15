@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <!--<template id="hr_attendance_report_styles" inherit_id="report.layout">
+            <xpath expr="//style" position="after">
+                <style type="text/css">
+                    .company-img img {
+                        width: 18em;
+                        height: 8em;
+                    }
+                    .company-info {
+                        font-size: 1.8em;
+                    }
+                    .title-main {
+                        font-size:2.5em;
+                        text-align: center;
+                        font-weight: bold;
+                        padding: 60px 0 60px 0;
+                    }
+                    .attendee-info {
+                        font-size: 2em;
+                        padding: 10px 0 35px 0;
+                    }
+                    .table-resume {
+                        font-size: 1.6em;
+                    }
+                </style>
+            </xpath>
+        </template>-->
+    </data>
+</odoo>

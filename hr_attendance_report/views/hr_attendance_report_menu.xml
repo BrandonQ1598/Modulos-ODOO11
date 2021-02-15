@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <!-- REPORTE RESUMEN GENERAL -->
+        <report
+            id="action_attendance_report"
+            string="Resumén lista"
+            model="hr.attendance.gaa"
+            report_type="qweb-pdf"
+            name="hr_attendance_report.report_hr_attendance"
+            file="hr_attendance_report.hr_attendance_report"
+            paperformat="hr_attendance_report.paperformat_letter"
+            menu="True"
+            />
+
+        <!--<record id="action_attendance_report" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="hr_attendance_report.paperformat_letter"/>
+        </record>-->
+    </data>
+</odoo>

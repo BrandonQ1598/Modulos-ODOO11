@@ -1,0 +1,12 @@
+<odoo>
+    <record model="ir.ui.view" id="account_payment_view_inh">
+      <field name="name">account.view_account_payment_form</field>
+      <field name="model">account.payment</field>
+      <field name="inherit_id" ref="account.view_account_payment_form"/>
+      <field name="arch" type="xml">
+        <field name="payment_transaction_id" position="after">
+          <field name="advance" string="Anticipo"></field>
+        </field>
+      </field>
+    </record>
+</odoo>

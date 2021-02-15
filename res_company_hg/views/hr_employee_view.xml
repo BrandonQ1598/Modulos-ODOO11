@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <!-- Formulario Empleados -->
+        <record id="hr_employee_company_hg_form_inh" model="ir.ui.view">
+            <field name="name">hr.employee.company.hg.form.inh</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <field name="work_location" position="after">
+                    <field name="company_hg_id"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

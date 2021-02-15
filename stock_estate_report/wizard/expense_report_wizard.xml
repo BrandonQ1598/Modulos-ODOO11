@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="expense_crop_report_wizard" model="ir.ui.view">
+            <field name="name">expense.crop.report.wizard</field>
+            <field name="model">expense.crop.report.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Reporte de gastos">
+                    <group>
+                        <group>
+                            <field name="season_id" on_change="get_domain_estate(season_id)" options="{'no_create': True}"/>
+                            <field name="estate_id" on_change="get_domain_crop(season_id, estate_id)" options="{'no_create': True}"/>
+                            <field name="crop_id" options="{'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="date_from" options="{'no_create': True}"/>
+                            <field name="date_to" options="{'no_create': True}"/>
+                            <field name="product_type_id" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="print_report_crop" type="object" string="Generar reporte" class="oe_highlight"/>
+                        o
+                        <button string="Cancelar" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="expense_crop_report_wizard_action" model="ir.actions.act_window">
+            <field name="name">Gastos de cultivos</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">expense.crop.report.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="expense_crop_report" parent="report_main_menu" name="Gastos por cultivo" action="expense_crop_report_wizard_action" sequence="2"/>
+    </data>
+</odoo>

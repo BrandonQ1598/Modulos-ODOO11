@@ -1,0 +1,47 @@
+/* Columna del cultivo de la lista de asistencia */
+[data-field="attended"], [data-field="attended_crop_id"], [data-field="time_in"], [data-field="time_out"],
+[data-field="total_attended"] {
+    background-color: #e2dd8a;
+}
+
+/* Columana de corte del primer cultivo */
+[data-field="boxes_rasp1"], [data-field="boxes_straw1"], [data-field="pots_rasp1"], 
+[data-field="pots_straw1"], [data-field="boxes_pots_crop_id1"], [data-field="total_boxes_rasp1"],
+[data-field="total_boxes_straw1"], [data-field="total_pots_rasp1"], [data-field="total_pots_straw1"] {
+    /*background-color: #ef9f7a; */
+    background-color: #e5b595;
+}
+
+/* Columna de corte del segundo cultivo */
+[data-field="boxes_rasp2"], [data-field="boxes_straw2"], [data-field="pots_rasp2"], 
+[data-field="pots_straw2"], [data-field="boxes_pots_crop_id2"], [data-field="total_boxes_rasp2"],
+[data-field="total_boxes_straw2"], [data-field="total_pots_rasp2"], [data-field="total_pots_straw2"] {
+    background-color: #abe585; 
+}
+
+/* Columna de corte del tercer cultivo */
+[data-field="boxes_rasp3"], [data-field="boxes_straw3"], [data-field="pots_rasp3"], 
+[data-field="pots_straw3"], [data-field="boxes_pots_crop_id3"], [data-field="total_boxes_rasp3"],
+[data-field="total_boxes_straw3"], [data-field="total_pots_rasp3"], [data-field="total_pots_straw3"] {
+    background-color: #aac7ed; 
+}
+
+/* Columna de horas de horas trabajadas */
+[data-field="hours"], [data-field="hours_crop_id"], [data-field="total_hours"] {
+    background-color: #d9bce5;
+}
+
+/* Columna de horas de horas extras trabajadas */
+[data-field="extra_hours"], [data-field="extra_hours_crop_id"], [data-field="total_extra_hours"],
+[data-field="extra_activity_id"] {
+    background-color: #e0aaaf;
+}
+
+/* Columna para gastos extras con justificación */
+[data-field="extra_expense"], [data-field="extra_expense_activity_id"], [data-field="extra_expense_estate_id"] {
+    background-color: #F7DD38;
+}
+
+/*[data-field="activity_id"] {
+	min-width: 220px;
+}*/

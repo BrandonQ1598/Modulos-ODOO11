@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <!-- res.company.hg > Tree view [Nuevo modelo empresas] -->
+        <record id="res_company_hg_tree" model="ir.ui.view">
+            <field name="name">res.company.hg.tree</field>
+            <field name="model">res.company.hg</field>
+            <field name="arch" type="xml">
+                <tree string="Empresas">
+                    <field name="name"/>
+                    <field name="vat"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- res.company.hg > Form view [Nuevo modelo empresas] -->
+        <record id="res_company_hg_form" model="ir.ui.view">
+            <field name="name">res.company.hg.form</field>
+            <field name="model">res.company.hg</field>
+            <field name="arch" type="xml">
+                <form string="Empresas">
+                    <sheet>
+                        <div>
+                            <field name="logo" widget="image" class="oe_avatar oe_left"/>
+                        </div>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" class="oe_inline"/>
+                            </h1>
+                        </div>
+                        <div attrs="{'invisible' : [('logo','!=',False)]}" class="oe_view_nocontent oe_clear">
+                            <p class="oe_view_nocontent_create oe_edit_only">
+                                Click to set your company logo.
+                            </p>
+                        </div>
+                        <group string="Datos">
+                            <group>
+                                <field name="partner_id"/>
+                                <label for="street" string="Dirección"/>
+                                <div>
+                                    <field name="street" placeholder="Calle..."/>
+                                    <field name="street2" placeholder="Colonia"/>
+                                    <div>
+                                        <field name="city" placeholder="City" style="width: 40%"/>
+                                        <field name="state_id" class="oe_no_button" placeholder="Estado" style="width: 24%" options="{&quot;no_open&quot;: True}"/>
+                                        <field name="zip" placeholder="ZIP" style="width: 34%"/>
+                                        <field name="country_id" placeholder="País" class="oe_no_button" options="{&quot;no_open&quot;: True}"/>
+                                    </div>
+                                </div>
+                            </group>
+                            <group>
+                                <field name="rml_header1" placeholder="Ej. Soluciones globales"/>
+                                <field name="website" widget="url" placeholder="Ej. www.odoo.com"/>
+                                <field name="phone"/>
+                                <field name="email"/>
+                                <field name="vat"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- res.company.hg > Action [Nuevo modelo de empresas] -->
+        <record id="res_company_hg_action" model="ir.actions.act_window">
+            <field name="name">Empresas</field>
+            <field name="res_model">res.company.hg</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Pulse aquí para crear una nueva empresa</p>
+            </field>
+        </record>
+
+        <!-- res.company.hg > Menu [Nuevo modelo de empresas -->
+        <menuitem id="res_company_hg_main_menu" parent="stock_estate.estate_main_menu" sequence="3" name="Empresas"/>
+        <menuitem id="res_company_hg_create" parent="res_company_hg_main_menu" name="Empresas" action="res_company_hg_action"/>
+    </data>
+</odoo>

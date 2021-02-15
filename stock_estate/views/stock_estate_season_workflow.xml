@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<odoo>
+     <record id="stock_estate_season_form_wk" model="ir.ui.view">
+        <field name="name">stock.estate.season.form</field>
+            <field name="model">stock.estate.season</field>
+            <field name="arch" type="xml">
+                <form string="Stock">
+                        <header>
+                            <button name="action_canceled" type="object" states="draft,open,closed" string="Cancelar" groups="base.group_user"/>
+                            <button name="action_closed" type="object" states="draft,canceled,open" string="Cerrar" groups="base.group_user"/>
+                            <button name="action_open" type="object" states="draft,closed,canceled" string="Abrir" groups="base.group_user"/>
+                            <button name="action_draft" type="object" states="open,closed,canceled" string="Borrador" groups="base.group_user"/>
+                            <field name="state" widget="statusbar" statusbar_visible="open,draft,closed,Canceled"/>
+                        </header>
+                </form>
+            </field>
+    </record>
+</odoo>

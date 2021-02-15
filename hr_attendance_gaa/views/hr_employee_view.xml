@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="hr_employee_order_inh" model="ir.ui.view">
+            <field name="name">hr.employee.order.inh</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <field name="coach_id" position="after">
+                    <field name="employee_type" widget="selection"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Formulario Vehículos -->
+        <record id="fleet_vehicle_company_hg_form_inh" model="ir.ui.view">
+            <field name="name">fleet.vehicle.company.hg.form.inh</field>
+            <field name="model">fleet.vehicle</field>
+            <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/sheet/group/group/field[@name='car_value']" position="after">
+                    <field name="company_hg_id" string="Empresa"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

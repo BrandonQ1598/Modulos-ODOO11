@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Acción de los predios accede al modelo heredado de los almácenes -->
+        <record id="action_stock_estate" model="ir.actions.act_window">
+            <field name="name">Predios</field>
+            <field name="res_model">stock.warehouse</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('is_estate', '=', 'True')]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Crear un nuevo predio
+                </p>
+            </field>
+        </record>
+
+        <!-- Acción de las existencias accede al modelo heredado de los almácenes -->
+        <record id="action_stock_inventory" model="ir.actions.act_window">
+            <field name="name">Existencias en predios</field>
+            <field name="res_model">stock.location</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('is_estate', '=', 'True'), ('usage', '=', 'internal')]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Crear una nueva ubicación
+                </p>
+            </field>
+        </record>
+
+        <!-- Menús del módulo Predios -->
+        <menuitem id="estate_main_menu" name="Predios" groups="group_estate_user,group_estate_manager"/>
+        <menuitem id="estate_configuration_main" name="Configuración" parent="estate_main_menu" sequence="4"/>
+        <menuitem action="action_stock_estate" id="menu_stock_estate_tree" parent="estate_configuration_main" sequence="2"/>
+        <menuitem action="action_stock_inventory" id="menu_inventory_estate" parent="estate_configuration_main" sequence="3"/>
+
+        <!-- Formulario Almácenes -->
+        <!-- Añadir campo Predio a los almácenes -->
+        <record id="stock_estate_warehouse_form_inh" model="ir.ui.view">
+            <field name="name">stock.estate.warehouse.form.inh</field>
+            <field name="model">stock.warehouse</field>
+            <field name="inherit_id" ref="stock.view_warehouse"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="after">
+                    <field name="is_estate"/>
+                    <field name="hectare" attrs="{'invisible': [('is_estate', '=', False)]}"/>
+                    <field name="active"/>
+                </field>
+            </field>
+        </record>
+
+        <!-- Ubicaciones -->
+        <!-- Añadir el campo Predio a las ubicaciones -->
+        <record id="stock_estate_location_form_inh" model="ir.ui.view">
+            <field name="name">stock.estate.location.form.inh</field>
+            <field name="model">stock.location</field>
+            <field name="inherit_id" ref="stock.view_location_form"/>
+            <field name="arch" type="xml">
+                <field name="active" position="after">
+                    <field name="is_estate"/>
+                </field>
+            </field>
+        </record>
+        <!-- Modificar vista árbol de la ubicación -->
+        <record id="stock_estate_location_tree_inh" model="ir.ui.view">
+            <field name="name">stock.estate.location.tree.inh</field>
+            <field name="model">stock.location</field>
+            <field name="inherit_id" ref="stock.view_location_tree2"/>
+            <field name="arch" type="xml">
+                <field name="usage" position="after">
+                    <field name="is_estate"/>
+                </field>
+            </field>
+        </record>
+
+        <!-- Tipo de Ubicaciones -->
+        <!-- Añadir el campo Predio al tipo de ubicaciones -->
+        <record id="stock_estate_picking_type_form_inh" model="ir.ui.view">
+            <field name="name">stock.estate.picking.type.form.inh</field>
+            <field name="model">stock.picking.type</field>
+            <field name="inherit_id" ref="stock.view_picking_type_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='return_picking_type_id']" position="after">
+                    <field name="is_estate"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Agregar filtro a los almacenes -->
+        <record id="stock.action_warehouse_form" model="ir.actions.act_window">
+            <field name="domain">[('is_estate', '!=', 'True')]</field>
+        </record>
+
+        <!-- Agregar filtro a las ubicaciones -->
+        <record id="stock.action_location_form" model="ir.actions.act_window">
+            <field name="domain">[('is_estate', '!=', 'True')]</field>
+        </record>
+    </data>
+</odoo>

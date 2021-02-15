@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <!-- Reporte del trabajo del día -->
+        <report
+            id="action_print_work_day_tuesday"
+            string="Trabajo del día"
+            model="hr.attendance.gaa.tuesday"
+            report_type="qweb-pdf"
+            name="hr_attendance_gaa.report_print_work_day_tuesday"
+            file="hr_attendance_gaa.print_work_day_report_tuesday"
+            paperformat="hr_attendance_gaa.paperformat_ticket_attendance"
+        />
+        <report
+            id="action_print_work_day_wednesday"
+            string="Trabajo del día"
+            model="hr.attendance.gaa.wednesday"
+            report_type="qweb-pdf"
+            name="hr_attendance_gaa.report_print_work_day_wednesday"
+            file="hr_attendance_gaa.print_work_day_report_wednesday"
+            paperformat="hr_attendance_gaa.paperformat_ticket_attendance"
+        />
+        <report
+            id="action_print_work_day_thursday"
+            string="Trabajo del día"
+            model="hr.attendance.gaa.thursday"
+            report_type="qweb-pdf"
+            name="hr_attendance_gaa.report_print_work_day_thursday"
+            file="hr_attendance_gaa.print_work_day_report_thursday"
+            paperformat="hr_attendance_gaa.paperformat_ticket_attendance"
+        />
+        <report
+            id="action_print_work_day_friday"
+            string="Trabajo del día"
+            model="hr.attendance.gaa.friday"
+            report_type="qweb-pdf"
+            name="hr_attendance_gaa.report_print_work_day_friday"
+            file="hr_attendance_gaa.print_work_day_report_friday"
+            paperformat="hr_attendance_gaa.paperformat_ticket_attendance"
+        />
+        <report
+            id="action_print_work_day_saturday"
+            string="Trabajo del día"
+            model="hr.attendance.gaa.saturday"
+            report_type="qweb-pdf"
+            name="hr_attendance_gaa.report_print_work_day_saturday"
+            file="hr_attendance_gaa.print_work_day_report_saturday"
+            paperformat="hr_attendance_gaa.paperformat_ticket_attendance"
+        />
+        <report
+            id="action_print_work_day_sunday"
+            string="Trabajo del día"
+            model="hr.attendance.gaa.sunday"
+            report_type="qweb-pdf"
+            name="hr_attendance_gaa.report_print_work_day_sunday"
+            file="hr_attendance_gaa.print_work_day_report_sunday"
+            paperformat="hr_attendance_gaa.paperformat_ticket_attendance"
+        />
+        <report
+            id="action_print_work_day_monday"
+            string="Trabajo del día"
+            model="hr.attendance.gaa.monday"
+            report_type="qweb-pdf"
+            name="hr_attendance_gaa.report_print_work_day_monday"
+            file="hr_attendance_gaa.print_work_day_report_monday"
+            paperformat="hr_attendance_gaa.paperformat_ticket_attendance"
+        />
+        <report
+            id="action_print_work_day_resumen"
+            string="Trabajo del día"
+            model="hr.attendance.gaa.resume"
+            report_type="qweb-pdf"
+            name="hr_attendance_gaa.report_print_work_day_resumen"
+            file="hr_attendance_gaa.print_work_day_report_resumen"
+            paperformat="hr_attendance_gaa.paperformat_ticket_attendance"
+        />
+        <!-- Tamaño de papel ticket
+        <record id="action_print_work_day_tuesday" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="hr_attendance_gaa.paperformat_ticket_attendance"/>
+        </record>
+        <record id="action_print_work_day_wednesday" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="hr_attendance_gaa.paperformat_ticket_attendance"/>
+        </record>
+        <record id="action_print_work_day_thursday" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="hr_attendance_gaa.paperformat_ticket_attendance"/>
+        </record>
+        <record id="action_print_work_day_friday" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="hr_attendance_gaa.paperformat_ticket_attendance"/>
+        </record>
+        <record id="action_print_work_day_saturday" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="hr_attendance_gaa.paperformat_ticket_attendance"/>
+        </record>
+        <record id="action_print_work_day_sunday" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="hr_attendance_gaa.paperformat_ticket_attendance"/>
+        </record>
+        <record id="action_print_work_day_monday" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="hr_attendance_gaa.paperformat_ticket_attendance"/>
+        </record>
+        <record id="action_print_work_day_resumen" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="hr_attendance_gaa.paperformat_ticket_attendance"/>
+        </record>-->
+    </data>
+</odoo>
